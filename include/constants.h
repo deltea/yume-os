@@ -12,3 +12,4 @@ const uint16_t MAX_BATTERY_VOLTAGE = 4.2;
 
 const uint16_t FG = 0xFFFF;
 const uint16_t BG = 0x0000;
+const uint16_t ACCENT = 0x43D2;

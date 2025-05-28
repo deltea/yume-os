@@ -9,11 +9,15 @@ BatteryScreen::BatteryScreen(GFXcanvas16* c) {
 void BatteryScreen::init() {
   canvas->setTextColor(FG);
   canvas->setTextWrap(false);
+
+  pinMode(A0, INPUT_PULLUP);
 }
 
 void BatteryScreen::update() {
-  angle += 4;
-  if (angle >= 360) angle = 0;
+  if (digitalRead(A0) != LOW) {
+    angle += 4;
+    if (angle >= 360) angle = 0;
+  }
 
   frame++;
 }

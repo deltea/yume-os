@@ -9,6 +9,8 @@
 #include "screen_manager.h"
 #include "screens/battery_screen.h"
 #include "screens/confirmation_screen.h"
+#include "screens/gradient_screen.h"
+#include "screens/player_screen.h"
 
 Adafruit_SSD1351 display = Adafruit_SSD1351(SCREEN_WIDTH, SCREEN_HEIGHT, &SPI, OLED_CS, OLED_DC, OLED_RST);
 
@@ -18,16 +20,17 @@ GFXcanvas16 lastFrame(SCREEN_WIDTH, SCREEN_HEIGHT);
 ScreenManager screenManager;
 BatteryScreen batteryScreen(&currentFrame);
 ConfirmationScreen confirmationScreen(&currentFrame);
+GradientScreen gradientScreen(&currentFrame);
+PlayerScreen playerScreen(&currentFrame);
 
 void setup() {
   display.begin();
   display.setSPISpeed(8000000);
   display.fillScreen(BG);
 
-  pinMode(A0, INPUT_PULLUP);
   Serial.begin(9600);
 
-  screenManager.setScreen(&confirmationScreen);
+  screenManager.setScreen(&playerScreen);
   screenManager.init();
 }
 
