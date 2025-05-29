@@ -7,9 +7,9 @@
 #define OLED_DC 33
 #define OLED_RST 27
 
-const uint16_t MAX_ANALOG_VALUE = 4095;
-const uint16_t MAX_BATTERY_VOLTAGE = 4.2;
+#define MAX_ANALOG_VALUE 4095
+#define MAX_BATTERY_VOLTAGE 4.2
 
-const uint16_t FG = 0xFFFF;
-const uint16_t BG = 0x0000;
-const uint16_t ACCENT = 0x43D2;
+#define FG 0xFFFF
+#define BG 0x0000
+#define ACCENT 0xFF00

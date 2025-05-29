@@ -1,16 +1,13 @@
 #include <SPI.h>
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1351.h>
-
 #include "cutepixel.h"
 #include "monogram.h"
 #include "constants.h"
+#include "ScreenManager.h"
 
-#include "screen_manager.h"
-#include "screens/battery_screen.h"
-#include "screens/confirmation_screen.h"
-#include "screens/gradient_screen.h"
-#include "screens/player_screen.h"
+#include "screens/ConfirmationScreen.h"
+#include "screens/PlayerScreen.h"
 
 Adafruit_SSD1351 display = Adafruit_SSD1351(SCREEN_WIDTH, SCREEN_HEIGHT, &SPI, OLED_CS, OLED_DC, OLED_RST);
 
@@ -18,10 +15,10 @@ GFXcanvas16 currentFrame(SCREEN_WIDTH, SCREEN_HEIGHT);
 GFXcanvas16 lastFrame(SCREEN_WIDTH, SCREEN_HEIGHT);
 
 ScreenManager screenManager;
-BatteryScreen batteryScreen(&currentFrame);
-ConfirmationScreen confirmationScreen(&currentFrame);
-GradientScreen gradientScreen(&currentFrame);
-PlayerScreen playerScreen(&currentFrame);
+AppState appState;
+
+ConfirmationScreen confirmationScreen(&screenManager, &currentFrame, &appState);
+PlayerScreen playerScreen(&screenManager, &currentFrame, &appState);
 
 void setup() {
   display.begin();
@@ -51,6 +48,12 @@ void loop() {
       }
     }
   }
+
+  // battery calculations
+  int rawValue = analogRead(A13);
+  float voltageLevel = (rawValue / 4095.0) * 2 * 1.1 * 3.3;
+  float batteryFraction = voltageLevel / MAX_BATTERY_VOLTAGE;
+  appState.setBatteryLevel((int)(batteryFraction * 100.0));
 
   delay(16);
 }

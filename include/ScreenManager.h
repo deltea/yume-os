@@ -1,6 +1,9 @@
 #pragma once
 
-#include "screen.h"
+using namespace std;
+
+#include <list>
+#include "Screen.h"
 
 class ScreenManager {
   private:

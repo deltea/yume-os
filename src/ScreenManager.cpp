@@ -1,4 +1,5 @@
-#include "screen_manager.h"
+#include "ScreenManager.h"
+#include <list>
 
 void ScreenManager::setScreen(Screen* screen) {
   currentScreen = screen;

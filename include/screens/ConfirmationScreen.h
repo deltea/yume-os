@@ -1,0 +1,28 @@
+#pragma once
+
+#include <Adafruit_GFX.h>
+
+#include "ScreenManager.h"
+#include "Screen.h"
+#include "AppState.h"
+
+class ConfirmationScreen : public Screen {
+  private:
+    GFXcanvas16* canvas;
+    ScreenManager* screenManager;
+    AppState* state;
+
+    int select_index = 0;
+    float margin = 4;
+    int scroll = 0;
+    int scroll_speed = 1.0;
+    String danger_text = "DANGER!";
+    uint16_t text_width = 0;
+
+  public:
+    ConfirmationScreen(ScreenManager* screenManager, GFXcanvas16* canvas, AppState* appState);
+
+    void init() override;
+    void update() override;
+    void draw() override;
+};
