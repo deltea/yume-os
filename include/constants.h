@@ -6,6 +6,7 @@
 #define OLED_CS 15
 #define OLED_DC 33
 #define OLED_RST 27
+#define SD_CS 32
 
 #define MAX_ANALOG_VALUE 4095
 #define MAX_BATTERY_VOLTAGE 4.2

@@ -1,8 +1,5 @@
 #pragma once
 
-using namespace std;
-
-#include <list>
 #include "Screen.h"
 
 class ScreenManager {

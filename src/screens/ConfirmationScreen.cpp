@@ -1,12 +1,12 @@
 #include "screens/ConfirmationScreen.h"
 #include "ScreenManager.h"
-#include "AppState.h"
+#include "State.h"
 #include "constants.h"
 #include "cutepixel.h"
 #include "monogram.h"
 
-ConfirmationScreen::ConfirmationScreen(ScreenManager* screenManager, GFXcanvas16* canvas, AppState* appState)
-  : screenManager(screenManager), canvas(canvas), state(appState) {};
+ConfirmationScreen::ConfirmationScreen(ScreenManager* screenManager, GFXcanvas16* canvas, State* state)
+  : screenManager(screenManager), canvas(canvas), state(state) {};
 
 void ConfirmationScreen::init() {
   canvas->setTextColor(FG);
