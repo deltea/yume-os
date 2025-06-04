@@ -6,10 +6,11 @@
 #include "constants.h"
 #include "ScreenManager.h"
 #include "FileManager.h"
+#include "InputManager.h"
 
 #include "screens/ConfirmationScreen.h"
 #include "screens/PlayerScreen.h"
-#include "screens/MovieScreen.h"
+#include "screens/LibraryScreen.h"
 
 Adafruit_SSD1351 display = Adafruit_SSD1351(SCREEN_WIDTH, SCREEN_HEIGHT, &SPI, OLED_CS, OLED_DC, OLED_RST);
 
@@ -19,16 +20,21 @@ GFXcanvas16 lastFrame(SCREEN_WIDTH, SCREEN_HEIGHT);
 ScreenManager screenManager;
 FileManager fileManager;
 State state;
+InputManager inputManager;
 
-ConfirmationScreen confirmationScreen(&screenManager, &currentFrame, &state);
-PlayerScreen playerScreen(&screenManager, &currentFrame, &state);
-MovieScreen movieScreen(&screenManager, &currentFrame, &state);
+ConfirmationScreen confirmationScreen(&screenManager, &currentFrame, &state, &inputManager);
+PlayerScreen playerScreen(&screenManager, &currentFrame, &state, &inputManager);
+LibraryScreen libraryScreen(&screenManager, &currentFrame, &state, &inputManager);
 
 void setup() {
   Serial.begin(9600);
   SPI.begin();
 
   pinMode(BUTTON, INPUT_PULLUP);
+  pinMode(BUTTON_LEFT, INPUT_PULLUP);
+  pinMode(BUTTON_RIGHT, INPUT_PULLUP);
+
+  Serial.println("booting...");
 
   if (!SD.begin(SD_CS)) {
     Serial.println("sd card initialization failed!");
@@ -39,13 +45,15 @@ void setup() {
 
   display.begin();
   display.fillScreen(BG);
-  // display.setSPISpeed(8000000);
+  display.setSPISpeed(8000000);
 
   screenManager.setScreen(&playerScreen);
   screenManager.init();
 }
 
 void loop() {
+  inputManager.updateInput();
+
   screenManager.update();
   screenManager.draw();
 

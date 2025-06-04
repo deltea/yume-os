@@ -8,14 +8,38 @@
 #include "cutepixel.h"
 #include "utils.h"
 
-PlayerScreen::PlayerScreen(ScreenManager* screenManager, GFXcanvas16* canvas, State* state) : screenManager(screenManager), canvas(canvas), state(state) {
+PlayerScreen::PlayerScreen(ScreenManager* screenManager, GFXcanvas16* canvas, State* state, InputManager* inputManager) : screenManager(screenManager), canvas(canvas), state(state), inputManager(inputManager) {
   this->last_frame_time = 0;
   this->dt = 0;
   this->title_scroll = 0;
   this->title_scroll_speed = 1;
   this->scroll_timer = 0;
   this->scroll_delay = 5;
+  this->isButtonDown = false;
 };
+
+void PlayerScreen::readCoverImage() {
+  File cover = SD.open(state->getCurrentTrack().cover_path);
+  if (cover && cover.available()) {
+    cover.read((uint8_t*)cover_buffer, sizeof(cover_buffer));
+    cover.close();
+  } else {
+    Serial.println("couldn't open cover art file 💀");
+  }
+}
+
+void PlayerScreen::nextTrack() {
+  if (state->currentIndex + 1 >= state->queue.size()) {
+    state->currentIndex = 0;
+  } else {
+    state->currentIndex++;
+  }
+
+  readCoverImage();
+
+  title_scroll = 0;
+  scroll_timer = 0;
+}
 
 void PlayerScreen::init() {
   canvas->setTextWrap(false);
@@ -28,6 +52,14 @@ void PlayerScreen::update() {
   unsigned long now = millis();
   dt = (now - last_frame_time) / 1000.0;
   last_frame_time = now;
+
+  // input
+  if (inputManager->isLeftButtonDown() && !isButtonDown) {
+    nextTrack();
+    isButtonDown = true;
+  } else if (!inputManager->isLeftButtonDown()) {
+    isButtonDown = false;
+  }
 
   // don't scroll if the title and artist fit on the screen
   if (String(state->getCurrentTrack().title + " - " + state->getCurrentTrack().artist).length() * 6 < SCREEN_WIDTH) {

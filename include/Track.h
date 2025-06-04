@@ -7,5 +7,5 @@ struct Track {
   String artist;
   uint16_t duration;
   uint16_t color;
-  File cover_file;
+  String cover_path;
 };

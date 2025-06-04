@@ -5,15 +5,17 @@
 #include "ScreenManager.h"
 #include "Screen.h"
 #include "State.h"
+#include "InputManager.h"
 
-class MovieScreen : public Screen {
+class LibraryScreen : public Screen {
   private:
     GFXcanvas16* canvas;
     ScreenManager* screenManager;
     State* state;
+    InputManager* inputManager;
 
   public:
-    MovieScreen(ScreenManager* screenManager, GFXcanvas16* canvas, State* state);
+    LibraryScreen(ScreenManager* screenManager, GFXcanvas16* canvas, State* state, InputManager* inputManager);
 
     void init() override;
     void update() override;

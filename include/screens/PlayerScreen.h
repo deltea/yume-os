@@ -5,12 +5,14 @@
 #include "ScreenManager.h"
 #include "Screen.h"
 #include "State.h"
+#include "InputManager.h"
 
 class PlayerScreen : public Screen {
   private:
     GFXcanvas16* canvas;
     ScreenManager* screenManager;
     State* state;
+    InputManager* inputManager;
 
     const uint16_t PROGRESS_BAR_HEIGHT = 2;
 
@@ -22,13 +24,13 @@ class PlayerScreen : public Screen {
     float scroll_delay;
     uint16_t cover_buffer[86 * 86];
 
-    void readCoverImage() {
-      state->getCurrentTrack().cover_file.read((uint8_t*)cover_buffer, sizeof(cover_buffer));
-      state->getCurrentTrack().cover_file.close();
-    }
+    bool isButtonDown;
+
+    void readCoverImage();
+    void nextTrack();
 
   public:
-    PlayerScreen(ScreenManager* screenManager, GFXcanvas16* canvas, State* state);
+    PlayerScreen(ScreenManager* screenManager, GFXcanvas16* canvas, State* state, InputManager* inputManager);
 
     void init() override;
     void update() override;

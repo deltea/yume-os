@@ -5,12 +5,14 @@
 #include "ScreenManager.h"
 #include "Screen.h"
 #include "State.h"
+#include "InputManager.h"
 
 class ConfirmationScreen : public Screen {
   private:
     GFXcanvas16* canvas;
     ScreenManager* screenManager;
     State* state;
+    InputManager* inputManager;
 
     int select_index = 0;
     float margin = 4;
@@ -20,7 +22,7 @@ class ConfirmationScreen : public Screen {
     uint16_t text_width = 0;
 
   public:
-    ConfirmationScreen(ScreenManager* screenManager, GFXcanvas16* canvas, State* state);
+    ConfirmationScreen(ScreenManager* screenManager, GFXcanvas16* canvas, State* state, InputManager* inputManager);
 
     void init() override;
     void update() override;

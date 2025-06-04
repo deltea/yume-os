@@ -11,7 +11,7 @@ class State {
     vector<Track> queue = {};
     vector<Track> library = {};
 
-    uint16_t currentIndex = 2;
+    uint16_t currentIndex = 0;
     bool isPlaying = false;
     int batteryLevel = 100;
 
