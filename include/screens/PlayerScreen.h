@@ -24,8 +24,6 @@ class PlayerScreen : public Screen {
     float scroll_delay;
     uint16_t cover_buffer[86 * 86];
 
-    bool isButtonDown;
-
     void readCoverImage();
     void nextTrack();
 

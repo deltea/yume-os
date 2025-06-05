@@ -36,6 +36,12 @@ void setup() {
 
   Serial.println("booting...");
 
+  display.begin();
+  display.fillScreen(BG);
+  display.setSPISpeed(8000000);
+  display.setTextColor(FG);
+  display.println("booting...");
+
   if (!SD.begin(SD_CS)) {
     Serial.println("sd card initialization failed!");
     return;
@@ -43,16 +49,22 @@ void setup() {
 
   fileManager.indexSongs("/.bumpi", state.queue);
 
-  display.begin();
   display.fillScreen(BG);
-  display.setSPISpeed(8000000);
+
+  // shuffle queue
+  if (state.queue.size() > 1) {
+    for (size_t i = 0; i < state.queue.size(); i++) {
+      size_t j = random(i, state.queue.size());
+      std::swap(state.queue[i], state.queue[j]);
+    }
+  }
 
   screenManager.setScreen(&playerScreen);
   screenManager.init();
 }
 
 void loop() {
-  inputManager.updateInput();
+  // inputManager.updateInput();
 
   screenManager.update();
   screenManager.draw();

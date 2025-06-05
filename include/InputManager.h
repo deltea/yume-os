@@ -8,11 +8,8 @@ class InputManager {
     bool is_right_button_down;
 
   public:
-    void updateInput();
-    bool isLeftButtonDown() {
-      return is_left_button_down;
-    }
-    bool isRightButtonDown() {
-      return is_right_button_down;
-    }
+    InputManager();
+
+    bool isLeftButtonDown();
+    bool isRightButtonDown();
 };

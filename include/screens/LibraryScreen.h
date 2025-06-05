@@ -14,6 +14,10 @@ class LibraryScreen : public Screen {
     State* state;
     InputManager* inputManager;
 
+    const vector<String> OPTIONS = {"playlists", "artists", "albums", "songs"};
+
+    int select_index;
+
   public:
     LibraryScreen(ScreenManager* screenManager, GFXcanvas16* canvas, State* state, InputManager* inputManager);
 

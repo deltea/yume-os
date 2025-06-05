@@ -15,7 +15,6 @@ PlayerScreen::PlayerScreen(ScreenManager* screenManager, GFXcanvas16* canvas, St
   this->title_scroll_speed = 1;
   this->scroll_timer = 0;
   this->scroll_delay = 5;
-  this->isButtonDown = false;
 };
 
 void PlayerScreen::readCoverImage() {
@@ -24,7 +23,7 @@ void PlayerScreen::readCoverImage() {
     cover.read((uint8_t*)cover_buffer, sizeof(cover_buffer));
     cover.close();
   } else {
-    Serial.println("couldn't open cover art file 💀");
+    Serial.println("couldn't open cover art file");
   }
 }
 
@@ -53,13 +52,10 @@ void PlayerScreen::update() {
   dt = (now - last_frame_time) / 1000.0;
   last_frame_time = now;
 
-  // input
-  if (inputManager->isLeftButtonDown() && !isButtonDown) {
+  if (inputManager->isLeftButtonDown()) {
     nextTrack();
-    isButtonDown = true;
-  } else if (!inputManager->isLeftButtonDown()) {
-    isButtonDown = false;
   }
+
 
   // don't scroll if the title and artist fit on the screen
   if (String(state->getCurrentTrack().title + " - " + state->getCurrentTrack().artist).length() * 6 < SCREEN_WIDTH) {
