@@ -14,6 +14,7 @@ PlayerScreen::PlayerScreen(ScreenManager* screenManager, GFXcanvas16* canvas, St
   this->title_scroll = 0;
   this->title_scroll_speed = 1;
   this->scroll_timer = 0;
+  this->scroll_wait_timer = 0;
   this->scroll_delay = 5;
 };
 
@@ -56,10 +57,11 @@ void PlayerScreen::update() {
     nextTrack();
   }
 
-
   // don't scroll if the title and artist fit on the screen
-  if (String(state->getCurrentTrack().title + " - " + state->getCurrentTrack().artist).length() * 6 < SCREEN_WIDTH) {
-    title_scroll = -(SCREEN_WIDTH - String(state->getCurrentTrack().title + " - " + state->getCurrentTrack().artist).length() * 6) / 2;
+  String title_artist = state->getCurrentTrack().title + " - " + state->getCurrentTrack().artist;
+
+  if (getTextWidth(title_artist) < SCREEN_WIDTH) {
+    title_scroll = -(SCREEN_WIDTH - getTextWidth(title_artist)) / 2;
     return;
   }
 
@@ -68,10 +70,17 @@ void PlayerScreen::update() {
     return;
   }
 
-  title_scroll += title_scroll_speed;
-  if (title_scroll > String(state->getCurrentTrack().title + " - " + state->getCurrentTrack().artist).length() * 6) {
+  if (scroll_wait_timer < scroll_delay) {
+    scroll_wait_timer += dt;
+    return;
+  } else {
     title_scroll = 0;
-    scroll_timer = 0;
+  }
+
+  title_scroll += title_scroll_speed;
+  if (title_scroll > getTextWidth(title_artist) - SCREEN_WIDTH) {
+    // title_scroll = 0;
+    scroll_wait_timer = 0;
   }
 }
 

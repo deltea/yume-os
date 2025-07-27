@@ -11,6 +11,7 @@
 #include "screens/ConfirmationScreen.h"
 #include "screens/PlayerScreen.h"
 #include "screens/LibraryScreen.h"
+#include "screens/QueueScreen.h"
 
 Adafruit_SSD1351 display = Adafruit_SSD1351(SCREEN_WIDTH, SCREEN_HEIGHT, &SPI, OLED_CS, OLED_DC, OLED_RST);
 
@@ -25,6 +26,7 @@ InputManager inputManager;
 ConfirmationScreen confirmationScreen(&screenManager, &currentFrame, &state, &inputManager);
 PlayerScreen playerScreen(&screenManager, &currentFrame, &state, &inputManager);
 LibraryScreen libraryScreen(&screenManager, &currentFrame, &state, &inputManager);
+QueueScreen queueScreen(&screenManager, &currentFrame, &state, &inputManager);
 
 void setup() {
   Serial.begin(9600);
@@ -44,10 +46,11 @@ void setup() {
 
   if (!SD.begin(SD_CS)) {
     Serial.println("sd card initialization failed!");
+    display.println("sd card initialization failed!");
     return;
   }
 
-  fileManager.indexSongs("/.bumpi", state.queue);
+  fileManager.indexSongs("/.yume", state.queue);
 
   display.fillScreen(BG);
 
@@ -64,8 +67,6 @@ void setup() {
 }
 
 void loop() {
-  // inputManager.updateInput();
-
   screenManager.update();
   screenManager.draw();
 
