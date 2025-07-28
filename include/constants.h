@@ -10,9 +10,11 @@
 #define OLED_RST 27
 #define SD_CS 32
 
-// buttons
-#define BUTTON_LEFT 13
+// input
+#define BUTTON_LEFT 14
 #define BUTTON_RIGHT 12
+#define ROTARY_A 36
+#define ROTARY_B 4
 
 // battery detction
 #define MAX_ANALOG_VALUE 4095

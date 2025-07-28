@@ -28,22 +28,51 @@ PlayerScreen playerScreen(&screenManager, &currentFrame, &state, &inputManager);
 LibraryScreen libraryScreen(&screenManager, &currentFrame, &state, &inputManager);
 QueueScreen queueScreen(&screenManager, &currentFrame, &state, &inputManager);
 
+volatile int last_state_a = HIGH;
+volatile int rotary_value = 0;
+
+void IRAM_ATTR readEncoder() {
+  int current_state_a = digitalRead(ROTARY_A);
+
+  if (current_state_a != last_state_a) {
+    if (digitalRead(ROTARY_B) != current_state_a) {
+      rotary_value++;
+    } else {
+      rotary_value--;
+    }
+
+    // Serial.print("value - ");
+    // Serial.println(rotary_value);
+  }
+
+  last_state_a = current_state_a;
+}
+
 void setup() {
   Serial.begin(9600);
   SPI.begin();
 
+  // input
   pinMode(BUTTON, INPUT_PULLUP);
   pinMode(BUTTON_LEFT, INPUT_PULLUP);
   pinMode(BUTTON_RIGHT, INPUT_PULLUP);
+  pinMode(ROTARY_A, INPUT_PULLUP);
+  pinMode(ROTARY_B, INPUT_PULLUP);
 
+  // wrapper for isr
+  attachInterrupt(digitalPinToInterrupt(ROTARY_A), readEncoder, CHANGE);
+
+  // boot screen
   Serial.println("booting...");
 
+  // display initialization
   display.begin();
   display.fillScreen(BG);
   display.setSPISpeed(8000000);
   display.setTextColor(FG);
   display.println("booting...");
 
+  // card reader initializion
   if (!SD.begin(SD_CS)) {
     Serial.println("sd card initialization failed!");
     display.println("sd card initialization failed!");
@@ -69,6 +98,9 @@ void setup() {
 void loop() {
   screenManager.update();
   screenManager.draw();
+
+  Serial.print("value: ");
+  Serial.println(rotary_value);
 
   // compare and update only changed pixels
   uint16_t* curr = currentFrame.getBuffer();
