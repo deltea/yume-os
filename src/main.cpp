@@ -47,8 +47,8 @@ void IRAM_ATTR readEncoder() {
       rotary_value--;
     }
 
-    // Serial.print("value - ");
-    // Serial.println(rotary_value);
+    Serial.print("value: ");
+    Serial.println(rotary_value);
   }
 
   last_state_a = current_state_a;
@@ -56,7 +56,15 @@ void IRAM_ATTR readEncoder() {
 
 void audioTask(void *parameter) {
   while (true) {
-    audio.loop();
+    if (audio.isRunning()) {
+      audio.loop();
+    } else {
+      if (audio.connecttoFS(SD, "/It's Going Down Now.mp3")) {
+        Serial.println("audio connected");
+      } else {
+        Serial.println("audio connect failed");
+      }
+    }
     vTaskDelay(1);
   }
 }
@@ -126,19 +134,8 @@ void setup() {
   // audio decoder initialization
   audio.setPinout(DAC_BCLK, DAC_LRC, DAC_DATA);
   audio.setVolume(6);
-  if (!audio.connecttoFS(SD, "/It's Going Down Now.mp3")) {
-    Serial.println("audio connect failed");
-  }
 
-  xTaskCreatePinnedToCore(
-    audioTask,
-    "audioplay",
-    12288,                  // Increased stack size
-    NULL,
-    5,                     // Higher priority
-    NULL,
-    1                      // Core 1
-  );
+  xTaskCreatePinnedToCore(audioTask, "audioplay", 12288, NULL, 5, NULL, 1);
 
   fileManager.indexSongs("/.yume", state.queue);
 
@@ -160,9 +157,6 @@ void loop() {
   screenManager.update();
   screenManager.draw();
 
-  Serial.print("value: ");
-  Serial.println(rotary_value);
-
   // compare and update only changed pixels
   uint16_t* curr = currentFrame.getBuffer();
   uint16_t* prev = lastFrame.getBuffer();
@@ -183,6 +177,6 @@ void loop() {
   float batteryFraction = voltageLevel / MAX_BATTERY_VOLTAGE;
   state.setBatteryLevel((int)(batteryFraction * 100.0));
 
-  delay(1000 / 60);
+  // delay(1000 / 60);
   vTaskDelay(2);
 }
