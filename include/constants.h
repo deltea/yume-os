@@ -10,10 +10,15 @@
 #define OLED_RST 27
 #define SD_CS 32
 
+// audio
+#define DAC_DATA 25
+#define DAC_BCLK 26
+#define DAC_LRC 13
+
 // input
 #define BUTTON_LEFT 14
 #define BUTTON_RIGHT 12
-#define ROTARY_A 36
+#define ROTARY_A 7
 #define ROTARY_B 4
 
 // battery detction

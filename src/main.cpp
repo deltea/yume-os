@@ -1,6 +1,10 @@
 #include <SPI.h>
+// #include <I2S.h>
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1351.h>
+#include <Adafruit_TLV320DAC3100.h>
+#include <Adafruit_TLV320DAC3100_typedefs.h>
+#include <Audio.h>
 #include "cutepixel.h"
 #include "monogram.h"
 #include "constants.h"
@@ -14,6 +18,8 @@
 #include "screens/QueueScreen.h"
 
 Adafruit_SSD1351 display = Adafruit_SSD1351(SCREEN_WIDTH, SCREEN_HEIGHT, &SPI, OLED_CS, OLED_DC, OLED_RST);
+Adafruit_TLV320DAC3100 dac;
+Audio audio;
 
 GFXcanvas16 currentFrame(SCREEN_WIDTH, SCREEN_HEIGHT);
 GFXcanvas16 lastFrame(SCREEN_WIDTH, SCREEN_HEIGHT);
@@ -48,9 +54,57 @@ void IRAM_ATTR readEncoder() {
   last_state_a = current_state_a;
 }
 
+void audioTask(void *parameter) {
+  while (true) {
+    audio.loop();
+    vTaskDelay(1);
+  }
+}
+
 void setup() {
   Serial.begin(9600);
   SPI.begin();
+
+  Wire.begin(22, 20);
+  if (!dac.begin()) {
+    Serial.println("dac initialization failed!");
+    display.println("dac initialization failed!");
+    return;
+  }
+
+  dac.setCodecInterface(TLV320DAC3100_FORMAT_I2S, TLV320DAC3100_DATA_LEN_16);
+  dac.setCodecClockInput(TLV320DAC3100_CODEC_CLKIN_PLL);
+  dac.setPLLValues(1, 2, 32, 0); // P=1, R=2, J=32, D=0
+  dac.powerPLL(true);
+
+  // Set dividers
+  dac.setNDAC(true, 8);
+  dac.setMDAC(true, 2);
+
+  dac.setDACDataPath(true, true,                    // Power up both DACs
+    TLV320_DAC_PATH_NORMAL,        // Normal left path
+    TLV320_DAC_PATH_NORMAL,        // Normal right path
+    TLV320_VOLUME_STEP_1SAMPLE);
+
+  // Configure analog routing
+  dac.configureAnalogInputs(TLV320_DAC_ROUTE_MIXER, // Left DAC to mixer
+            TLV320_DAC_ROUTE_MIXER,   // Right DAC to mixer
+            false, false, false,      // No AIN routing
+            false);                   // No HPL->HPR
+  dac.configureHeadphoneDriver(true, true, TLV320_HP_COMMON_1_35V, false);
+  // dac.enableBeep(true);
+
+  // Configure headphone PGAs
+  dac.configureHPL_PGA(0, true); // Set HPL gain, unmute
+  dac.configureHPR_PGA(0, true); // Set HPR gain, unmute
+
+  // Set headphone volumes
+  dac.setHPLVolume(true, 6);     // Enable and set HPL volume
+  dac.setHPRVolume(true, 6);     // Enable and set HPR volume
+
+  dac.setDACVolumeControl(false, false, TLV320_VOL_INDEPENDENT); // Unmute both channels
+  dac.setChannelVolume(false, 0);  // Left DAC 0dB
+  dac.setChannelVolume(true, 0);   // Right DAC 0dB
 
   // input
   pinMode(BUTTON, INPUT_PULLUP);
@@ -62,14 +116,14 @@ void setup() {
   // wrapper for isr
   attachInterrupt(digitalPinToInterrupt(ROTARY_A), readEncoder, CHANGE);
 
-  // boot screen
-  Serial.println("booting...");
-
   // display initialization
   display.begin();
   display.fillScreen(BG);
   display.setSPISpeed(8000000);
   display.setTextColor(FG);
+
+  // boot screen
+  Serial.println("booting...");
   display.println("booting...");
 
   // card reader initializion
@@ -78,6 +132,24 @@ void setup() {
     display.println("sd card initialization failed!");
     return;
   }
+
+  // audio initialization
+  // audio.setBufsize(2048, 1024);
+  audio.setPinout(DAC_BCLK, DAC_LRC, DAC_DATA);
+  audio.setVolume(3);
+  if (!audio.connecttoFS(SD, "/Persona 5 - Last Surprise.mp3")) {
+    Serial.println("audio connect failed");
+  }
+
+  xTaskCreatePinnedToCore(
+    audioTask,
+    "audioplay",
+    8192,                  // Increased stack size
+    NULL,
+    3,                     // Higher priority
+    NULL,
+    1                      // Core 1
+  );
 
   fileManager.indexSongs("/.yume", state.queue);
 
@@ -123,4 +195,5 @@ void loop() {
   state.setBatteryLevel((int)(batteryFraction * 100.0));
 
   delay(1000 / 60);
+  vTaskDelay(1);
 }
