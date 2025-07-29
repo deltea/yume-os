@@ -41,11 +41,7 @@ void IRAM_ATTR readEncoder() {
   int current_state_a = digitalRead(ROTARY_A);
 
   if (current_state_a != last_state_a) {
-    if (digitalRead(ROTARY_B) != current_state_a) {
-      rotary_value++;
-    } else {
-      rotary_value--;
-    }
+    rotary_value += (digitalRead(ROTARY_B) != current_state_a) ? 1 : -1;
 
     Serial.print("value: ");
     Serial.println(rotary_value);
@@ -81,28 +77,29 @@ void setup() {
   }
 
   // dac configuration
-  dac.setCodecInterface(TLV320DAC3100_FORMAT_I2S, TLV320DAC3100_DATA_LEN_16);
+  dac.setCodecInterface(TLV320DAC3100_FORMAT_I2S, TLV320DAC3100_DATA_LEN_24);
   dac.setCodecClockInput(TLV320DAC3100_CODEC_CLKIN_PLL);
   dac.setPLLValues(1, 1, 32, 0);
   dac.powerPLL(true);
 
-  dac.setNDAC(true, 4);
-  dac.setMDAC(true, 4);
+  dac.setNDAC(true, 2);
+  dac.setMDAC(true, 2);
 
   dac.setDACDataPath(true, true, TLV320_DAC_PATH_NORMAL, TLV320_DAC_PATH_NORMAL, TLV320_VOLUME_STEP_1SAMPLE);
 
   dac.configureAnalogInputs(TLV320_DAC_ROUTE_MIXER, TLV320_DAC_ROUTE_MIXER, false, false, false, false);
   dac.configureHeadphoneDriver(true, true, TLV320_HP_COMMON_1_35V, false);
 
-  dac.configureHPL_PGA(0, true);
-  dac.configureHPR_PGA(0, true);
+  dac.configureHPL_PGA(3, true);
+  dac.configureHPR_PGA(3, true);
 
-  dac.setHPLVolume(true, 12);
-  dac.setHPRVolume(true, 12);
+  dac.setHPLVolume(true, 18);
+  dac.setHPRVolume(true, 18);
+
+  dac.setChannelVolume(false, -3);
+  dac.setChannelVolume(true, -3);
 
   dac.setDACVolumeControl(false, false, TLV320_VOL_INDEPENDENT);
-  dac.setChannelVolume(false, -4);
-  dac.setChannelVolume(true, -4);
 
   // input
   pinMode(BUTTON, INPUT_PULLUP);
@@ -132,6 +129,9 @@ void setup() {
   }
 
   // audio decoder initialization
+  audio.forceMono(false);
+  audio.setI2SCommFMT_LSB(false);
+  audio.setConnectionTimeout(500, 2700);
   audio.setPinout(DAC_BCLK, DAC_LRC, DAC_DATA);
   audio.setVolume(6);
 
@@ -172,11 +172,11 @@ void loop() {
   }
 
   // battery calculations
-  int rawValue = analogRead(A13);
-  float voltageLevel = (rawValue / 4095.0) * 2 * 1.1 * 3.3;
-  float batteryFraction = voltageLevel / MAX_BATTERY_VOLTAGE;
-  state.setBatteryLevel((int)(batteryFraction * 100.0));
+  // int rawValue = analogRead(A13);
+  // float voltageLevel = (rawValue / 4095.0) * 2 * 1.1 * 3.3;
+  // float batteryFraction = voltageLevel / MAX_BATTERY_VOLTAGE;
+  // state.setBatteryLevel((int)(batteryFraction * 100.0));
 
   // delay(1000 / 60);
-  vTaskDelay(2);
+  vTaskDelay(4);
 }
