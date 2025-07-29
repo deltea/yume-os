@@ -74,12 +74,12 @@ void setup() {
 
   dac.setCodecInterface(TLV320DAC3100_FORMAT_I2S, TLV320DAC3100_DATA_LEN_16);
   dac.setCodecClockInput(TLV320DAC3100_CODEC_CLKIN_PLL);
-  dac.setPLLValues(1, 2, 32, 0); // P=1, R=2, J=32, D=0
+  dac.setPLLValues(1, 1, 32, 0);
   dac.powerPLL(true);
 
   // Set dividers
-  dac.setNDAC(true, 8);
-  dac.setMDAC(true, 2);
+  dac.setNDAC(true, 4);
+  dac.setMDAC(true, 4);
 
   dac.setDACDataPath(true, true,                    // Power up both DACs
     TLV320_DAC_PATH_NORMAL,        // Normal left path
@@ -103,8 +103,8 @@ void setup() {
   dac.setHPRVolume(true, 6);     // Enable and set HPR volume
 
   dac.setDACVolumeControl(false, false, TLV320_VOL_INDEPENDENT); // Unmute both channels
-  dac.setChannelVolume(false, 0);  // Left DAC 0dB
-  dac.setChannelVolume(true, 0);   // Right DAC 0dB
+  dac.setChannelVolume(false, -4);  // Left DAC 0dB
+  dac.setChannelVolume(true, -4);   // Right DAC 0dB
 
   // input
   pinMode(BUTTON, INPUT_PULLUP);
@@ -134,19 +134,19 @@ void setup() {
   }
 
   // audio initialization
-  // audio.setBufsize(2048, 1024);
+  // audio.setBufsize(1024, 1024);
   audio.setPinout(DAC_BCLK, DAC_LRC, DAC_DATA);
-  audio.setVolume(3);
-  if (!audio.connecttoFS(SD, "/Persona 5 - Last Surprise.mp3")) {
+  audio.setVolume(5);
+  if (!audio.connecttoFS(SD, "/Specialist.mp3")) {
     Serial.println("audio connect failed");
   }
 
   xTaskCreatePinnedToCore(
     audioTask,
     "audioplay",
-    8192,                  // Increased stack size
+    12288,                  // Increased stack size
     NULL,
-    3,                     // Higher priority
+    5,                     // Higher priority
     NULL,
     1                      // Core 1
   );
@@ -195,5 +195,5 @@ void loop() {
   state.setBatteryLevel((int)(batteryFraction * 100.0));
 
   delay(1000 / 60);
-  vTaskDelay(1);
+  vTaskDelay(2);
 }
