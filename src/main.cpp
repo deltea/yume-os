@@ -43,7 +43,7 @@ void IRAM_ATTR readEncoder() {
   if (current_state_a != last_state_a) {
     rotary_value += (digitalRead(ROTARY_B) != current_state_a) ? 1 : -1;
 
-    Serial.print("value: ");
+    Serial.print("rotary value: ");
     Serial.println(rotary_value);
   }
 
@@ -55,7 +55,7 @@ void audioTask(void *parameter) {
     if (audio.isRunning()) {
       audio.loop();
     } else {
-      if (audio.connecttoFS(SD, "/It's Going Down Now.mp3")) {
+      if (audio.connecttoFS(SD, "/specialist.mp3")) {
         Serial.println("audio connected");
       } else {
         Serial.println("audio connect failed");
@@ -68,6 +68,14 @@ void audioTask(void *parameter) {
 void setup() {
   Serial.begin(9600);
   SPI.begin();
+
+  // display initialization
+  display.begin();
+  display.fillScreen(BG);
+  display.setSPISpeed(8000000);
+  display.setTextColor(FG);
+
+  delay(300);
 
   Wire.begin(22, 20);
   if (!dac.begin()) {
@@ -110,12 +118,6 @@ void setup() {
 
   // wrapper for isr
   attachInterrupt(digitalPinToInterrupt(ROTARY_A), readEncoder, CHANGE);
-
-  // display initialization
-  display.begin();
-  display.fillScreen(BG);
-  display.setSPISpeed(8000000);
-  display.setTextColor(FG);
 
   // boot screen
   Serial.println("booting...");

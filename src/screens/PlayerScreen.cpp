@@ -70,16 +70,16 @@ void PlayerScreen::update() {
     return;
   }
 
-  if (scroll_wait_timer < scroll_delay) {
-    scroll_wait_timer += dt;
-    return;
-  } else {
-    title_scroll = 0;
-  }
+  // if (scroll_wait_timer < scroll_delay) {
+  //   scroll_wait_timer += dt;
+  //   return;
+  // } else {
+  //   title_scroll = 0;
+  // }
 
   title_scroll += title_scroll_speed;
   if (title_scroll > getTextWidth(title_artist) - SCREEN_WIDTH) {
-    // title_scroll = 0;
+    title_scroll = 0;
     scroll_wait_timer = 0;
   }
 }
