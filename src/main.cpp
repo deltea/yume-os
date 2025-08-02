@@ -1,4 +1,4 @@
-#include <SPI.h>
+s#include <SPI.h>
 // #include <I2S.h>
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1351.h>
@@ -50,17 +50,24 @@ void IRAM_ATTR readEncoder() {
   last_state_a = current_state_a;
 }
 
+void playSong(const String& songPath) {
+  if (audio.isRunning()) {
+    audio.stopSong();
+  }
+
+  if (audio.connecttoFS(SD, songPath.c_str())) {
+    Serial.println("audio connected");
+  } else {
+    Serial.println("audio connect failed");
+  }
+}
+
 void audioTask(void *parameter) {
   while (true) {
     if (audio.isRunning()) {
       audio.loop();
-    } else {
-      if (audio.connecttoFS(SD, "/specialist.mp3")) {
-        Serial.println("audio connected");
-      } else {
-        Serial.println("audio connect failed");
-      }
     }
+
     vTaskDelay(1);
   }
 }
@@ -68,6 +75,7 @@ void audioTask(void *parameter) {
 void setup() {
   Serial.begin(9600);
   SPI.begin();
+  SPI.setFrequency(40000000);
 
   // display initialization
   display.begin();
@@ -75,7 +83,7 @@ void setup() {
   display.setSPISpeed(8000000);
   display.setTextColor(FG);
 
-  delay(300);
+  delay(100);
 
   Wire.begin(22, 20);
   if (!dac.begin()) {
@@ -87,27 +95,29 @@ void setup() {
   // dac configuration
   dac.setCodecInterface(TLV320DAC3100_FORMAT_I2S, TLV320DAC3100_DATA_LEN_24);
   dac.setCodecClockInput(TLV320DAC3100_CODEC_CLKIN_PLL);
+  dac.setPLLClockInput(TLV320DAC3100_PLL_CLKIN_BCLK);
   dac.setPLLValues(1, 1, 32, 0);
   dac.powerPLL(true);
 
-  dac.setNDAC(true, 2);
-  dac.setMDAC(true, 2);
+  dac.setNDAC(true, 4);
+  dac.setMDAC(true, 4);
 
   dac.setDACDataPath(true, true, TLV320_DAC_PATH_NORMAL, TLV320_DAC_PATH_NORMAL, TLV320_VOLUME_STEP_1SAMPLE);
-
   dac.configureAnalogInputs(TLV320_DAC_ROUTE_MIXER, TLV320_DAC_ROUTE_MIXER, false, false, false, false);
   dac.configureHeadphoneDriver(true, true, TLV320_HP_COMMON_1_35V, false);
 
-  dac.configureHPL_PGA(3, true);
-  dac.configureHPR_PGA(3, true);
-
-  dac.setHPLVolume(true, 18);
-  dac.setHPRVolume(true, 18);
-
-  dac.setChannelVolume(false, -3);
-  dac.setChannelVolume(true, -3);
-
+  dac.configureHPL_PGA(0, true);
+  dac.configureHPR_PGA(0, true);
+  dac.setHPLVolume(true, 12);
+  dac.setHPRVolume(true, 12);
+  dac.setChannelVolume(false, -6);
+  dac.setChannelVolume(true, -6);
   dac.setDACVolumeControl(false, false, TLV320_VOL_INDEPENDENT);
+
+  dac.configureHeadphonePop(true, TLV320_HP_TIME_304MS, TLV320_RAMP_4MS);
+  dac.setInputCommonMode(true, true);
+
+  delay(100);
 
   // input
   pinMode(BUTTON, INPUT_PULLUP);
@@ -136,6 +146,8 @@ void setup() {
   audio.setConnectionTimeout(500, 2700);
   audio.setPinout(DAC_BCLK, DAC_LRC, DAC_DATA);
   audio.setVolume(6);
+
+  playSong("/i drank the wrong potion.webmyt.mp3");
 
   xTaskCreatePinnedToCore(audioTask, "audioplay", 12288, NULL, 5, NULL, 1);
 
