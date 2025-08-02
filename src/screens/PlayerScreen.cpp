@@ -101,10 +101,10 @@ void PlayerScreen::draw() {
 
   // song name and artist
   // todo: make this less ugly
-  canvas->setTextColor(state->getCurrentTrack().color);
+  canvas->setTextColor(FG);
   canvas->setCursor(0 - title_scroll, SCREEN_HEIGHT - PROGRESS_BAR_HEIGHT - 20);
   canvas->print(state->getCurrentTrack().title);
-  canvas->setTextColor(FG);
+  canvas->setTextColor(state->getCurrentTrack().color);
   canvas->setCursor(state->getCurrentTrack().title.length() * 6 - title_scroll, SCREEN_HEIGHT - PROGRESS_BAR_HEIGHT - 20);
   canvas->print(" - " + state->getCurrentTrack().artist);
 
