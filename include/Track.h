@@ -8,4 +8,5 @@ struct Track {
   uint16_t duration;
   uint16_t color;
   String cover_path;
+  String audio_path;
 };

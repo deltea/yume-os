@@ -8,13 +8,13 @@ using namespace std;
 
 class State {
   public:
-    vector<Track> queue = {};
+    vector<String> queue = {};
     vector<Track> library = {};
 
     uint16_t currentIndex = 0;
     bool isPlaying = false;
     int batteryLevel = 100;
 
-    Track getCurrentTrack();
+    String getCurrentTrackName();
     void setBatteryLevel(int level);
 };

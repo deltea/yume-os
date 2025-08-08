@@ -1,7 +1,7 @@
 #include "State.h"
 
-Track State::getCurrentTrack() {
-  if (queue.empty()) return Track();
+String State::getCurrentTrackName() {
+  if (queue.empty()) return "";
   return queue[currentIndex];
 }
 

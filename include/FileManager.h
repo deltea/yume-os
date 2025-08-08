@@ -9,5 +9,6 @@ using namespace std;
 
 class FileManager {
   public:
-    void indexSongs(const String& path, vector<Track>& tracks);
+    void indexSongs(const String& path, vector<String>& tracks);
+    Track getTrack(const String& path);
 };

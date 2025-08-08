@@ -5,8 +5,8 @@
 #include "cutepixel.h"
 #include "monogram.h"
 
-ConfirmationScreen::ConfirmationScreen(ScreenManager* screenManager, GFXcanvas16* canvas, State* state, InputManager* inputManager)
-  : screenManager(screenManager), canvas(canvas), state(state), inputManager(inputManager) {};
+ConfirmationScreen::ConfirmationScreen(ScreenManager* screenManager, GFXcanvas16* canvas, State* state, InputManager* inputManager, FileManager* fileManager)
+  : screenManager(screenManager), canvas(canvas), state(state), inputManager(inputManager), fileManager(fileManager) {};
 
 void ConfirmationScreen::init() {
   canvas->setTextColor(FG);

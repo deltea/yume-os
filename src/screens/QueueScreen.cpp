@@ -4,7 +4,9 @@
 #include "cutepixel.h"
 #include "monogram.h"
 
-QueueScreen::QueueScreen(ScreenManager* screenManager, GFXcanvas16* canvas, State* state, InputManager* inputManager) : screenManager(screenManager), canvas(canvas), state(state), inputManager(inputManager) {
+QueueScreen::QueueScreen(
+  ScreenManager* screenManager, GFXcanvas16* canvas, State* state, InputManager* inputManager, FileManager* fileManager
+) : screenManager(screenManager), canvas(canvas), state(state), inputManager(inputManager), fileManager(fileManager) {
   this->select_index = 0;
 };
 
@@ -33,11 +35,11 @@ void QueueScreen::draw() {
       canvas->fillRect(0, 18 + 18 * i, SCREEN_WIDTH, 18, ACCENT);
     }
 
-    const Track& track = state->queue[i];
-    canvas->setCursor(8, 30 + 18 * i);
-    canvas->setTextColor(select_index == i ? BG : FG);
-    canvas->print(track.title);
-    canvas->print(" - ");
-    canvas->print(track.artist);
+    // const Track& track = state->queue[i];
+    // canvas->setCursor(8, 30 + 18 * i);
+    // canvas->setTextColor(select_index == i ? BG : FG);
+    // canvas->print(track.title);
+    // canvas->print(" - ");
+    // canvas->print(track.artist);
   }
 }

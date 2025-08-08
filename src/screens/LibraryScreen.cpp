@@ -4,7 +4,9 @@
 #include "cutepixel.h"
 #include "monogram.h"
 
-LibraryScreen::LibraryScreen(ScreenManager* screenManager, GFXcanvas16* canvas, State* state, InputManager* inputManager) : screenManager(screenManager), canvas(canvas), state(state), inputManager(inputManager) {
+LibraryScreen::LibraryScreen(
+  ScreenManager* screenManager, GFXcanvas16* canvas, State* state, InputManager* inputManager, FileManager* fileManager
+) : screenManager(screenManager), canvas(canvas), state(state), inputManager(inputManager), fileManager(fileManager) {
   this->select_index = 0;
 };
 

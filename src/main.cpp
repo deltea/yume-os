@@ -1,4 +1,4 @@
-s#include <SPI.h>
+#include <SPI.h>
 // #include <I2S.h>
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1351.h>
@@ -29,10 +29,10 @@ FileManager fileManager;
 State state;
 InputManager inputManager;
 
-ConfirmationScreen confirmationScreen(&screenManager, &currentFrame, &state, &inputManager);
-PlayerScreen playerScreen(&screenManager, &currentFrame, &state, &inputManager);
-LibraryScreen libraryScreen(&screenManager, &currentFrame, &state, &inputManager);
-QueueScreen queueScreen(&screenManager, &currentFrame, &state, &inputManager);
+ConfirmationScreen confirmationScreen(&screenManager, &currentFrame, &state, &inputManager, &fileManager);
+PlayerScreen playerScreen(&screenManager, &currentFrame, &state, &inputManager, &fileManager);
+LibraryScreen libraryScreen(&screenManager, &currentFrame, &state, &inputManager, &fileManager);
+QueueScreen queueScreen(&screenManager, &currentFrame, &state, &inputManager, &fileManager);
 
 volatile int last_state_a = HIGH;
 volatile int rotary_value = 0;
@@ -145,13 +145,13 @@ void setup() {
   audio.setI2SCommFMT_LSB(false);
   audio.setConnectionTimeout(500, 2700);
   audio.setPinout(DAC_BCLK, DAC_LRC, DAC_DATA);
-  audio.setVolume(6);
+  audio.setVolume(2);
 
-  playSong("/i drank the wrong potion.webmyt.mp3");
+  // playSong("/cassette.webmyt.mp3");
 
   xTaskCreatePinnedToCore(audioTask, "audioplay", 12288, NULL, 5, NULL, 1);
 
-  fileManager.indexSongs("/.yume", state.queue);
+  fileManager.indexSongs("/", state.queue);
 
   display.fillScreen(BG);
 
