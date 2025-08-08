@@ -1,16 +1,15 @@
 #include <SPI.h>
-// #include <I2S.h>
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1351.h>
 #include <Adafruit_TLV320DAC3100.h>
 #include <Adafruit_TLV320DAC3100_typedefs.h>
-#include <Audio.h>
 #include "cutepixel.h"
 #include "monogram.h"
 #include "constants.h"
 #include "ScreenManager.h"
 #include "FileManager.h"
 #include "InputManager.h"
+#include "AudioManager.h"
 
 #include "screens/ConfirmationScreen.h"
 #include "screens/PlayerScreen.h"
@@ -19,7 +18,6 @@
 
 Adafruit_SSD1351 display = Adafruit_SSD1351(SCREEN_WIDTH, SCREEN_HEIGHT, &SPI, OLED_CS, OLED_DC, OLED_RST);
 Adafruit_TLV320DAC3100 dac;
-Audio audio;
 
 GFXcanvas16 currentFrame(SCREEN_WIDTH, SCREEN_HEIGHT);
 GFXcanvas16 lastFrame(SCREEN_WIDTH, SCREEN_HEIGHT);
@@ -28,9 +26,10 @@ ScreenManager screenManager;
 FileManager fileManager;
 State state;
 InputManager inputManager;
+AudioManager audioManager;
 
 ConfirmationScreen confirmationScreen(&screenManager, &currentFrame, &state, &inputManager, &fileManager);
-PlayerScreen playerScreen(&screenManager, &currentFrame, &state, &inputManager, &fileManager);
+PlayerScreen playerScreen(&screenManager, &currentFrame, &state, &inputManager, &fileManager, &audioManager);
 LibraryScreen libraryScreen(&screenManager, &currentFrame, &state, &inputManager, &fileManager);
 QueueScreen queueScreen(&screenManager, &currentFrame, &state, &inputManager, &fileManager);
 
@@ -50,22 +49,10 @@ void IRAM_ATTR readEncoder() {
   last_state_a = current_state_a;
 }
 
-void playSong(const String& songPath) {
-  if (audio.isRunning()) {
-    audio.stopSong();
-  }
-
-  if (audio.connecttoFS(SD, songPath.c_str())) {
-    Serial.println("audio connected");
-  } else {
-    Serial.println("audio connect failed");
-  }
-}
-
 void audioTask(void *parameter) {
   while (true) {
-    if (audio.isRunning()) {
-      audio.loop();
+    if (audioManager.audio->isRunning()) {
+      audioManager.audio->loop();
     }
 
     vTaskDelay(1);
@@ -140,15 +127,7 @@ void setup() {
     return;
   }
 
-  // audio decoder initialization
-  audio.forceMono(false);
-  audio.setI2SCommFMT_LSB(false);
-  audio.setConnectionTimeout(500, 2700);
-  audio.setPinout(DAC_BCLK, DAC_LRC, DAC_DATA);
-  audio.setVolume(2);
-
-  // playSong("/cassette.webmyt.mp3");
-
+  audioManager.initAudio();
   xTaskCreatePinnedToCore(audioTask, "audioplay", 12288, NULL, 5, NULL, 1);
 
   fileManager.indexSongs("/", state.queue);

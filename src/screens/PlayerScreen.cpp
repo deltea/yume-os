@@ -9,8 +9,8 @@
 #include "utils.h"
 
 PlayerScreen::PlayerScreen(
-  ScreenManager* screenManager, GFXcanvas16* canvas, State* state, InputManager* inputManager, FileManager* fileManager
-) : screenManager(screenManager), canvas(canvas), state(state), inputManager(inputManager), fileManager(fileManager) {
+  ScreenManager* screenManager, GFXcanvas16* canvas, State* state, InputManager* inputManager, FileManager* fileManager, AudioManager* audioManager
+) : screenManager(screenManager), canvas(canvas), state(state), inputManager(inputManager), fileManager(fileManager), audioManager(audioManager) {
   this->last_frame_time = 0;
   this->dt = 0;
   this->title_scroll = 0;
@@ -40,6 +40,7 @@ void PlayerScreen::nextTrack() {
 
   this->current_track = fileManager->getTrack(state->getCurrentTrackName());
   readCoverImage();
+  audioManager->playTrack(current_track);
 
   title_scroll = 0;
   scroll_timer = 0;
@@ -51,6 +52,7 @@ void PlayerScreen::init() {
 
   this->current_track = fileManager->getTrack(state->getCurrentTrackName());
   readCoverImage();
+  audioManager->playTrack(current_track);
 }
 
 void PlayerScreen::update() {

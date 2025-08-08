@@ -7,6 +7,7 @@
 #include "State.h"
 #include "InputManager.h"
 #include "FileManager.h"
+#include "AudioManager.h"
 
 class PlayerScreen : public Screen {
   private:
@@ -15,6 +16,7 @@ class PlayerScreen : public Screen {
     State* state;
     InputManager* inputManager;
     FileManager* fileManager;
+    AudioManager* audioManager;
 
     const uint16_t PROGRESS_BAR_HEIGHT = 2;
 
@@ -32,7 +34,7 @@ class PlayerScreen : public Screen {
     void nextTrack();
 
   public:
-    PlayerScreen(ScreenManager* screenManager, GFXcanvas16* canvas, State* state, InputManager* inputManager, FileManager* fileManager);
+    PlayerScreen(ScreenManager* screenManager, GFXcanvas16* canvas, State* state, InputManager* inputManager, FileManager* fileManager, AudioManager* audioManager);
 
     void init() override;
     void update() override;
