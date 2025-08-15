@@ -1,9 +1,6 @@
 #include "AudioManager.h"
 #include "constants.h"
 
-AudioManager::AudioManager() {
-}
-
 void AudioManager::initAudio() {
   audio = new Audio();
 
@@ -12,8 +9,6 @@ void AudioManager::initAudio() {
   audio->setConnectionTimeout(500, 2700);
   audio->setPinout(DAC_BCLK, DAC_LRC, DAC_DATA);
   audio->setVolume(2);
-
-  // xTaskCreatePinnedToCore(audioTask, "audioplay", 12288, NULL, 5, NULL, 1);
 }
 
 void AudioManager::playTrack(const Track& track) {
@@ -27,13 +22,3 @@ void AudioManager::playTrack(const Track& track) {
     Serial.println("audio connect failed");
   }
 }
-
-// void AudioManager::audioTask(void *parameter) {
-//   while (true) {
-//     if (audio->isRunning()) {
-//       audio->loop();
-//     }
-
-//     vTaskDelay(1);
-//   }
-// }

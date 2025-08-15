@@ -18,3 +18,9 @@ uint16_t hexToRGB565(const char* hex) {
   sscanf(hex + 1, "%02hhx%02hhx%02hhx", &r, &g, &b);
   return ((r & 0xF8) << 8) | ((g & 0xFC) << 3) | (b >> 3);
 }
+
+String getTimestamp(int value) {
+  int minutes = value / 60;
+  int seconds = value % 60;
+  return (minutes < 10 ? "0" : "") + String(minutes) + ":" + (seconds < 10 ? "0" : "") + String(seconds);
+}

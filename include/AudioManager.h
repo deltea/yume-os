@@ -5,12 +5,10 @@
 
 class AudioManager {
   public:
-    AudioManager();
-
     Audio* audio;
+    float current_time;
+    float track_duration;
+
     void initAudio();
     void playTrack(const Track& track);
-    // void audioTask(void *parameter);
-    // void togglePause();
-
 };

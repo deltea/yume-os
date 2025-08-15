@@ -32,6 +32,7 @@ class PlayerScreen : public Screen {
 
     void readCoverImage();
     void nextTrack();
+    void updateTrack();
 
   public:
     PlayerScreen(ScreenManager* screenManager, GFXcanvas16* canvas, State* state, InputManager* inputManager, FileManager* fileManager, AudioManager* audioManager);

@@ -42,8 +42,8 @@ void IRAM_ATTR readEncoder() {
   if (current_state_a != last_state_a) {
     rotary_value += (digitalRead(ROTARY_B) != current_state_a) ? 1 : -1;
 
-    Serial.print("rotary value: ");
-    Serial.println(rotary_value);
+    // Serial.print("rotary value: ");
+    // Serial.println(rotary_value);
   }
 
   last_state_a = current_state_a;
@@ -149,6 +149,9 @@ void setup() {
 void loop() {
   screenManager.update();
   screenManager.draw();
+
+  // Serial.print("rotary value: ");
+  // Serial.println(rotary_value);
 
   // compare and update only changed pixels
   uint16_t* curr = currentFrame.getBuffer();
