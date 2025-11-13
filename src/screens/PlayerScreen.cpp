@@ -37,8 +37,10 @@ void PlayerScreen::updateTrack() {
 
   this->current_track = fileManager->getTrack(state->getCurrentTrackName());
   Serial.println("current track: " + this->current_track.title);
+
   readCoverImage();
   Serial.println("read cover image");
+
   audioManager->playTrack(current_track);
   Serial.println("played track");
 }

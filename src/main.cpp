@@ -41,9 +41,7 @@ void IRAM_ATTR readEncoder() {
 
   if (current_state_a != last_state_a) {
     rotary_value += (digitalRead(ROTARY_B) != current_state_a) ? 1 : -1;
-
-    // Serial.print("rotary value: ");
-    // Serial.println(rotary_value);
+    Serial.println(rotary_value);
   }
 
   last_state_a = current_state_a;
@@ -150,8 +148,8 @@ void loop() {
   screenManager.update();
   screenManager.draw();
 
-  // Serial.print("rotary value: ");
-  // Serial.println(rotary_value);
+  dac.setChannelVolume(false, -6 + rotary_value);
+  dac.setChannelVolume(true, -6 + rotary_value);
 
   // compare and update only changed pixels
   uint16_t* curr = currentFrame.getBuffer();
@@ -168,10 +166,14 @@ void loop() {
   }
 
   // battery calculations
-  // int rawValue = analogRead(A13);
+  int rawValue = analogRead(A13);
   // float voltageLevel = (rawValue / 4095.0) * 2 * 1.1 * 3.3;
-  // float batteryFraction = voltageLevel / MAX_BATTERY_VOLTAGE;
-  // state.setBatteryLevel((int)(batteryFraction * 100.0));
+  float voltageLevel = rawValue * 2 / 1000;
+  float batteryFraction = voltageLevel / MAX_BATTERY_VOLTAGE;
+  // Serial.print("Battery voltage: ");
+  // Serial.println(voltageLevel);
+
+  state.setBatteryLevel((int)(batteryFraction * 100.0));
 
   // delay(1000 / 60);
   vTaskDelay(4);
