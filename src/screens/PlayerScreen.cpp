@@ -16,7 +16,7 @@ PlayerScreen::PlayerScreen(
   this->title_scroll = 0;
   this->title_scroll_speed = 1;
   this->scroll_timer = 0;
-  this->scroll_wait_timer = 0;
+  this->scroll_state = 0;
   this->scroll_delay = 5;
   this->current_track = Track();
 };
@@ -34,6 +34,7 @@ void PlayerScreen::readCoverImage() {
 void PlayerScreen::updateTrack() {
   title_scroll = 0;
   scroll_timer = 0;
+  scroll_state = 0;
 
   this->current_track = fileManager->getTrack(state->getCurrentTrackName());
   Serial.println("current track: " + this->current_track.title);
@@ -79,22 +80,27 @@ void PlayerScreen::update() {
     return;
   }
 
-  if (scroll_timer < scroll_delay) {
+  if (scroll_state == 0) {
+    // waiting before scroll
     scroll_timer += dt;
-    return;
-  }
-
-  // if (scroll_wait_timer < scroll_delay) {
-  //   scroll_wait_timer += dt;
-  //   return;
-  // } else {
-  //   title_scroll = 0;
-  // }
-
-  title_scroll += title_scroll_speed;
-  if (title_scroll > getTextWidth(title_artist) - SCREEN_WIDTH) {
-    title_scroll = 0;
-    scroll_wait_timer = 0;
+    if (scroll_timer >= scroll_delay) {
+      scroll_timer = 0;
+      scroll_state = 1;
+    }
+  } else if (scroll_state == 1) {
+    // scrolling
+    title_scroll += title_scroll_speed;
+    if (title_scroll >= getTextWidth(title_artist) - SCREEN_WIDTH) {
+      title_scroll = 0;
+      scroll_state = 2;
+    }
+  } else {
+    // wait after scroll
+    scroll_timer += dt;
+    if (scroll_timer >= scroll_delay) {
+      scroll_timer = 0;
+      scroll_state = 0;
+    }
   }
 }
 
@@ -123,7 +129,7 @@ void PlayerScreen::draw() {
   // song name and artist
   // todo: make this less ugly
   canvas->setTextColor(FG);
-  canvas->setCursor(0 - title_scroll, SCREEN_HEIGHT - PROGRESS_BAR_HEIGHT - 20);
+  canvas->setCursor(-title_scroll, SCREEN_HEIGHT - PROGRESS_BAR_HEIGHT - 20);
   canvas->print(this->current_track.title);
 
   canvas->setTextColor(this->current_track.color);

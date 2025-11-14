@@ -25,7 +25,7 @@ class PlayerScreen : public Screen {
     int title_scroll;
     int title_scroll_speed;
     float scroll_timer;
-    float scroll_wait_timer;
+    int scroll_state;
     float scroll_delay;
     uint16_t cover_buffer[86 * 86];
     Track current_track;
