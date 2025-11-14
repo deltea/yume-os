@@ -91,7 +91,6 @@ void PlayerScreen::update() {
     // scrolling
     title_scroll += title_scroll_speed;
     if (title_scroll >= getTextWidth(title_artist) - SCREEN_WIDTH) {
-      title_scroll = 0;
       scroll_state = 2;
     }
   } else {
@@ -99,6 +98,7 @@ void PlayerScreen::update() {
     scroll_timer += dt;
     if (scroll_timer >= scroll_delay) {
       scroll_timer = 0;
+      title_scroll = 0;
       scroll_state = 0;
     }
   }
