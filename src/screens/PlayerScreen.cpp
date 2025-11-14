@@ -17,7 +17,8 @@ PlayerScreen::PlayerScreen(
   this->title_scroll_speed = 1;
   this->scroll_timer = 0;
   this->scroll_state = 0;
-  this->scroll_delay = 5;
+  this->start_scroll_delay = 5;
+  this->end_scroll_delay = 2;
   this->current_track = Track();
 };
 
@@ -83,7 +84,7 @@ void PlayerScreen::update() {
   if (scroll_state == 0) {
     // waiting before scroll
     scroll_timer += dt;
-    if (scroll_timer >= scroll_delay) {
+    if (scroll_timer >= start_scroll_delay) {
       scroll_timer = 0;
       scroll_state = 1;
     }
@@ -96,7 +97,7 @@ void PlayerScreen::update() {
   } else {
     // wait after scroll
     scroll_timer += dt;
-    if (scroll_timer >= scroll_delay) {
+    if (scroll_timer >= end_scroll_delay) {
       scroll_timer = 0;
       title_scroll = 0;
       scroll_state = 0;
