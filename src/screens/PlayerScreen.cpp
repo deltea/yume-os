@@ -113,7 +113,7 @@ void PlayerScreen::draw() {
     0,
     SCREEN_HEIGHT - PROGRESS_BAR_HEIGHT,
     // (this->audioManager->current_time / this->audioManager->track_duration) * SCREEN_WIDTH,
-    this->current_track.duration > 0 ? ((float)this->audioManager->audio->getAudioCurrentTime() / this->current_track.duration) * SCREEN_WIDTH : 0,
+    this->current_track.duration > 0 ? ((float)this->audioManager->getAudioCurrentTime() / this->current_track.duration) * SCREEN_WIDTH : 0,
     PROGRESS_BAR_HEIGHT,
     this->current_track.color
   );
@@ -122,7 +122,7 @@ void PlayerScreen::draw() {
   canvas->setTextColor(FG);
   canvas->setFont(&monogram8pt7b);
   canvas->setCursor(0, SCREEN_HEIGHT - PROGRESS_BAR_HEIGHT - 6);
-  canvas->print(getTimestamp(this->audioManager->audio->getAudioCurrentTime()));
+  canvas->print(getTimestamp(this->audioManager->getAudioCurrentTime()));
 
   canvas->setCursor(SCREEN_WIDTH - 5 * 7, SCREEN_HEIGHT - PROGRESS_BAR_HEIGHT - 6);
   canvas->print(getTimestamp(this->current_track.duration));

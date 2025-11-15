@@ -22,3 +22,9 @@ void AudioManager::playTrack(const Track& track) {
     Serial.println("audio connect failed");
   }
 }
+
+float AudioManager::getAudioCurrentTime() {
+  if (!audio) return 0.0f;
+  // guard in case audio library isn't running
+  return audio->getAudioCurrentTime();
+}

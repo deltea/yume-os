@@ -11,4 +11,6 @@ class AudioManager {
 
     void initAudio();
     void playTrack(const Track& track);
+  // return current play time in seconds (0 if no audio)
+  float getAudioCurrentTime();
 };
