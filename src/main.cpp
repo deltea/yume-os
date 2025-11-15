@@ -5,6 +5,7 @@
 #include <Adafruit_TLV320DAC3100_typedefs.h>
 #include "cutepixel.h"
 #include "monogram.h"
+#include "utils.h"
 #include "constants.h"
 #include "ScreenManager.h"
 #include "FileManager.h"
@@ -78,14 +79,14 @@ void setup() {
   }
 
   // dac configuration
-  dac.setCodecInterface(TLV320DAC3100_FORMAT_I2S, TLV320DAC3100_DATA_LEN_24);
+  dac.setCodecInterface(TLV320DAC3100_FORMAT_I2S, TLV320DAC3100_DATA_LEN_32);
   dac.setCodecClockInput(TLV320DAC3100_CODEC_CLKIN_PLL);
   dac.setPLLClockInput(TLV320DAC3100_PLL_CLKIN_BCLK);
   dac.setPLLValues(1, 1, 32, 0);
   dac.powerPLL(true);
 
-  dac.setNDAC(true, 4);
-  dac.setMDAC(true, 4);
+  dac.setNDAC(true, 2);
+  dac.setMDAC(true, 2);
 
   dac.setDACDataPath(true, true, TLV320_DAC_PATH_NORMAL, TLV320_DAC_PATH_NORMAL, TLV320_VOLUME_STEP_1SAMPLE);
   dac.configureAnalogInputs(TLV320_DAC_ROUTE_MIXER, TLV320_DAC_ROUTE_MIXER, false, false, false, false);
@@ -116,7 +117,13 @@ void setup() {
 
   // boot screen
   Serial.println("booting...");
-  display.println("booting...");
+  display.setTextColor(FG);
+  display.setFont(&cute_pixel8pt7b);
+  display.setCursor(SCREEN_WIDTH / 2 - getTextWidth("YUME_OS") / 2, SCREEN_HEIGHT / 2 - 8);
+  display.println("YUME_OS");
+  display.setFont(&monogram8pt7b);
+  display.setCursor(SCREEN_WIDTH / 2 - getTextWidth("booting up...") / 2, SCREEN_HEIGHT / 2 + 8);
+  display.println("booting up...");
 
   // card reader initializion
   if (!SD.begin(SD_CS)) {
