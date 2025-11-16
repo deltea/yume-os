@@ -122,6 +122,8 @@ void PlayerScreen::draw() {
   canvas->setTextColor(FG);
   canvas->setFont(&monogram8pt7b);
   canvas->setCursor(0, SCREEN_HEIGHT - PROGRESS_BAR_HEIGHT - 6);
+
+  // TODO: elapsed time is wrong (too much)
   canvas->print(getTimestamp(this->audioManager->getAudioCurrentTime()));
 
   canvas->setCursor(SCREEN_WIDTH - 5 * 7, SCREEN_HEIGHT - PROGRESS_BAR_HEIGHT - 6);

@@ -82,11 +82,11 @@ void setup() {
   dac.setCodecInterface(TLV320DAC3100_FORMAT_I2S, TLV320DAC3100_DATA_LEN_32);
   dac.setCodecClockInput(TLV320DAC3100_CODEC_CLKIN_PLL);
   dac.setPLLClockInput(TLV320DAC3100_PLL_CLKIN_BCLK);
-  dac.setPLLValues(1, 1, 32, 0);
+  dac.setPLLValues(1, 1, 64, 0);
   dac.powerPLL(true);
 
-  dac.setNDAC(true, 2);
-  dac.setMDAC(true, 2);
+  dac.setNDAC(true, 1);
+  dac.setMDAC(true, 1);
 
   dac.setDACDataPath(true, true, TLV320_DAC_PATH_NORMAL, TLV320_DAC_PATH_NORMAL, TLV320_VOLUME_STEP_1SAMPLE);
   dac.configureAnalogInputs(TLV320_DAC_ROUTE_MIXER, TLV320_DAC_ROUTE_MIXER, false, false, false, false);
@@ -94,10 +94,10 @@ void setup() {
 
   dac.configureHPL_PGA(0, true);
   dac.configureHPR_PGA(0, true);
-  dac.setHPLVolume(true, 12);
-  dac.setHPRVolume(true, 12);
-  dac.setChannelVolume(false, -6);
-  dac.setChannelVolume(true, -6);
+  dac.setHPLVolume(true, 15);
+  dac.setHPRVolume(true, 15);
+  dac.setChannelVolume(false, 0);
+  dac.setChannelVolume(true, 0);
   dac.setDACVolumeControl(false, false, TLV320_VOL_INDEPENDENT);
 
   dac.configureHeadphonePop(true, TLV320_HP_TIME_304MS, TLV320_RAMP_4MS);
