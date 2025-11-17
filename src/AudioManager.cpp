@@ -23,8 +23,8 @@ void AudioManager::playTrack(const Track& track) {
 
   if (audio->connecttoFS(SD, track.audio_path.c_str())) {
     Serial.println("audio connected");
-
     delay(30);
+
     // unmute dac
     dac.setDACVolumeControl(false, false, TLV320_VOL_INDEPENDENT);
   } else {

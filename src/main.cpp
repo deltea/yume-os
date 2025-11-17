@@ -57,11 +57,6 @@ void audioTask(void *parameter) {
       audioManager.audio->loop();
     }
 
-    UBaseType_t stackLeft = uxTaskGetStackHighWaterMark(NULL);
-    if (stackLeft < 512) {
-      Serial.printf("WARNING: audio task stack low: %d bytes left\n", stackLeft);
-    }
-
     vTaskDelay(1);
   }
 }

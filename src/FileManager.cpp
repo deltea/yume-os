@@ -37,6 +37,8 @@ void FileManager::indexSongs(const String& path, vector<String>& tracks) {
   }
 }
 
+
+
 Track FileManager::getTrack(const String& path) {
   File jsonFile = SD.open("/tracks/" + path + "/track.json");
   if (!jsonFile) {
