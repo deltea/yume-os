@@ -11,11 +11,13 @@
 #include "FileManager.h"
 #include "InputManager.h"
 #include "AudioManager.h"
+#include "icons.h"
 
 #include "screens/ConfirmationScreen.h"
 #include "screens/PlayerScreen.h"
 #include "screens/LibraryScreen.h"
 #include "screens/QueueScreen.h"
+#include "screens/PlaylistScreen.h"
 
 Adafruit_SSD1351 display = Adafruit_SSD1351(SCREEN_WIDTH, SCREEN_HEIGHT, &SPI, OLED_CS, OLED_DC, OLED_RST);
 Adafruit_TLV320DAC3100 dac;
@@ -33,6 +35,7 @@ ConfirmationScreen confirmationScreen(&screenManager, &currentFrame, &state, &in
 PlayerScreen playerScreen(&screenManager, &currentFrame, &state, &inputManager, &fileManager, &audioManager);
 LibraryScreen libraryScreen(&screenManager, &currentFrame, &state, &inputManager, &fileManager);
 QueueScreen queueScreen(&screenManager, &currentFrame, &state, &inputManager, &fileManager);
+PlaylistScreen playlistScreen(&screenManager, &currentFrame, &state, &inputManager, &fileManager);
 
 volatile int last_state_a = HIGH;
 volatile int rotary_value = 0;
@@ -124,6 +127,7 @@ void setup() {
   display.setFont(&monogram8pt7b);
   display.setCursor(SCREEN_WIDTH / 2 - getTextWidth("booting up...") / 2, SCREEN_HEIGHT / 2 + 8);
   display.println("booting up...");
+  display.drawRGBBitmap(SCREEN_WIDTH / 2 - getTextWidth("YUME_OS") / 2 - 18, SCREEN_HEIGHT / 2 - 15, ICON_MUSIC, 16, 9);
 
   // card reader initializion
   if (!SD.begin(SD_CS)) {
@@ -147,7 +151,7 @@ void setup() {
     }
   }
 
-  screenManager.setScreen(&playerScreen);
+  screenManager.setScreen(&playlistScreen);
   screenManager.init();
 }
 
