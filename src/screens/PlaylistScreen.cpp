@@ -29,4 +29,5 @@ void PlaylistScreen::draw() {
   canvas->drawRGBBitmap(1, 3, ICON_PLAYLIST, 9, 8);
   canvas->setCursor(14, 9);
   canvas->print("PLAYLISTS");
+  canvas->fillRect(0, 16, SCREEN_WIDTH, 1, FG);
 }
