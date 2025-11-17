@@ -1,10 +1,12 @@
 ![yume_os](yume_os.gif)
 
-# yume
+<!-- # yume -->
 
 ```
 my dream mp3 player made with an esp32
 ```
+
+library manager here: [yume_manager](https://github.com/deltea/yume_manager)
 
 ## known issues
 
