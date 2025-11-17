@@ -13,11 +13,20 @@ void AudioManager::initAudio() {
 
 void AudioManager::playTrack(const Track& track) {
   if (audio->isRunning()) {
+    // mute dac to prevent pop sound
+    dac.setDACVolumeControl(true, true, TLV320_VOL_INDEPENDENT);
+    delay(10);
+
     audio->stopSong();
+    delay(20);
   }
 
   if (audio->connecttoFS(SD, track.audio_path.c_str())) {
     Serial.println("audio connected");
+
+    delay(30);
+    // unmute dac
+    dac.setDACVolumeControl(false, false, TLV320_VOL_INDEPENDENT);
   } else {
     Serial.println("audio connect failed");
   }
