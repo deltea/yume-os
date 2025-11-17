@@ -28,7 +28,7 @@ class PlayerScreen : public Screen {
     int scroll_state;
     float start_scroll_delay;
     float end_scroll_delay;
-    uint16_t cover_buffer[86 * 86];
+    uint16_t* cover_buffer;
     Track current_track;
 
     void readCoverImage();
@@ -37,6 +37,7 @@ class PlayerScreen : public Screen {
 
   public:
     PlayerScreen(ScreenManager* screenManager, GFXcanvas16* canvas, State* state, InputManager* inputManager, FileManager* fileManager, AudioManager* audioManager);
+    ~PlayerScreen();
 
     void init() override;
     void update() override;

@@ -20,16 +20,31 @@ PlayerScreen::PlayerScreen(
   this->start_scroll_delay = 5;
   this->end_scroll_delay = 2;
   this->current_track = Track();
+
+  this->cover_buffer = (uint16_t*)malloc(86 * 86 * sizeof(uint16_t));
+  if (!this->cover_buffer) {
+    Serial.println("ERROR: Failed to allocate cover_buffer!");
+  }
 };
+
+PlayerScreen::~PlayerScreen() {
+  if (this->cover_buffer) {
+    free(this->cover_buffer);
+    this->cover_buffer = nullptr;
+  }
+}
 
 void PlayerScreen::readCoverImage() {
   File cover = SD.open(this->current_track.cover_path);
-  if (cover && cover.available()) {
-    cover.read((uint8_t*)cover_buffer, sizeof(cover_buffer));
-    cover.close();
-  } else {
+  if (!cover) {
     Serial.println("couldn't open cover art file");
+    return;
   }
+
+  if (cover.available() && cover_buffer) {
+    cover.read((uint8_t*)cover_buffer, 86 * 86 * sizeof(uint16_t));
+  }
+  cover.close();
 }
 
 void PlayerScreen::updateTrack() {
@@ -140,7 +155,9 @@ void PlayerScreen::draw() {
   canvas->print(" - " + this->current_track.artist);
 
   // cover art (and outline)
-  canvas->drawRGBBitmap(SCREEN_WIDTH / 2 - 43, SCREEN_HEIGHT / 3 - 38, cover_buffer, 86, 86);
+  if (cover_buffer) {
+    canvas->drawRGBBitmap(SCREEN_WIDTH / 2 - 43, SCREEN_HEIGHT / 3 - 38, cover_buffer, 86, 86);
+  }
   canvas->drawRect(SCREEN_WIDTH / 2 - 43, SCREEN_HEIGHT / 3 - 38, 86, 86, this->current_track.color);
   canvas->drawRect(SCREEN_WIDTH / 2 - 43 - 1, SCREEN_HEIGHT / 3 - 38 - 1, 86 + 2, 86 + 2, this->current_track.color);
 

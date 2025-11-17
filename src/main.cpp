@@ -57,6 +57,11 @@ void audioTask(void *parameter) {
       audioManager.audio->loop();
     }
 
+    UBaseType_t stackLeft = uxTaskGetStackHighWaterMark(NULL);
+    if (stackLeft < 512) {
+      Serial.printf("WARNING: audio task stack low: %d bytes left\n", stackLeft);
+    }
+
     vTaskDelay(1);
   }
 }
@@ -137,7 +142,7 @@ void setup() {
   }
 
   audioManager.initAudio();
-  xTaskCreatePinnedToCore(audioTask, "audioplay", 12288, NULL, 5, NULL, 1);
+  xTaskCreatePinnedToCore(audioTask, "audioplay", 16384, NULL, 5, NULL, 1);
 
   fileManager.indexSongs("/", state.queue);
 
@@ -151,7 +156,7 @@ void setup() {
     }
   }
 
-  screenManager.setScreen(&playlistScreen);
+  screenManager.setScreen(&playerScreen);
   screenManager.init();
 }
 

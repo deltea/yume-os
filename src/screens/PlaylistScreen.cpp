@@ -8,7 +8,9 @@
 
 PlaylistScreen::PlaylistScreen(
   ScreenManager* screenManager, GFXcanvas16* canvas, State* state, InputManager* inputManager, FileManager* fileManager
-) : screenManager(screenManager), canvas(canvas), state(state), inputManager(inputManager), fileManager(fileManager) {};
+) : screenManager(screenManager), canvas(canvas), state(state), inputManager(inputManager), fileManager(fileManager) {
+  this->select_index = 0;
+};
 
 void PlaylistScreen::init() {
   canvas->setTextColor(FG);
