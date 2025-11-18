@@ -2,22 +2,12 @@
 
 #include <Adafruit_GFX.h>
 
-#include "ScreenManager.h"
 #include "Screen.h"
-#include "State.h"
-#include "InputManager.h"
-#include "FileManager.h"
-#include "AudioManager.h"
+#include "AppContext.h"
+#include "Track.h"
 
 class PlayerScreen : public Screen {
   private:
-    GFXcanvas16* canvas;
-    ScreenManager* screenManager;
-    State* state;
-    InputManager* inputManager;
-    FileManager* fileManager;
-    AudioManager* audioManager;
-
     const uint16_t PROGRESS_BAR_HEIGHT = 2;
 
     unsigned long last_frame_time;
@@ -36,7 +26,7 @@ class PlayerScreen : public Screen {
     void updateTrack();
 
   public:
-    PlayerScreen(ScreenManager* screenManager, GFXcanvas16* canvas, State* state, InputManager* inputManager, FileManager* fileManager, AudioManager* audioManager);
+    PlayerScreen(AppContext* ctx) : Screen(ctx) {};
     ~PlayerScreen();
 
     void init() override;

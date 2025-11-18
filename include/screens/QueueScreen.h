@@ -10,16 +10,10 @@
 
 class QueueScreen : public Screen {
   private:
-    GFXcanvas16* canvas;
-    ScreenManager* screenManager;
-    State* state;
-    InputManager* inputManager;
-    FileManager* fileManager;
-
     int select_index;
 
   public:
-    QueueScreen(ScreenManager* screenManager, GFXcanvas16* canvas, State* state, InputManager* inputManager, FileManager* fileManager);
+    QueueScreen(AppContext* ctx) : Screen(ctx) {};
 
     void init() override;
     void update() override;

@@ -31,11 +31,20 @@ State state;
 InputManager inputManager;
 AudioManager audioManager;
 
-ConfirmationScreen confirmationScreen(&screenManager, &currentFrame, &state, &inputManager, &fileManager);
-PlayerScreen playerScreen(&screenManager, &currentFrame, &state, &inputManager, &fileManager, &audioManager);
-LibraryScreen libraryScreen(&screenManager, &currentFrame, &state, &inputManager, &fileManager);
-QueueScreen queueScreen(&screenManager, &currentFrame, &state, &inputManager, &fileManager);
-PlaylistScreen playlistScreen(&screenManager, &currentFrame, &state, &inputManager, &fileManager);
+AppContext ctx = {
+  .state = &state,
+  .audio = &audioManager,
+  .files = &fileManager,
+  .input = &inputManager,
+  .screens = &screenManager,
+  .canvas = &currentFrame
+};
+
+ConfirmationScreen confirmationScreen(&ctx);
+PlayerScreen playerScreen(&ctx);
+LibraryScreen libraryScreen(&ctx);
+QueueScreen queueScreen(&ctx);
+PlaylistScreen playlistScreen(&ctx);
 
 volatile int last_state_a = HIGH;
 volatile int rotary_value = 0;

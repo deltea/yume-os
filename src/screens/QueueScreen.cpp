@@ -4,42 +4,38 @@
 #include "cutepixel.h"
 #include "monogram.h"
 
-QueueScreen::QueueScreen(
-  ScreenManager* screenManager, GFXcanvas16* canvas, State* state, InputManager* inputManager, FileManager* fileManager
-) : screenManager(screenManager), canvas(canvas), state(state), inputManager(inputManager), fileManager(fileManager) {
-  this->select_index = 0;
-};
-
 void QueueScreen::init() {
-  canvas->setTextColor(FG);
-  canvas->setTextWrap(false);
-  canvas->setTextSize(1);
+  select_index = 0;
+
+  ctx->canvas->setTextColor(FG);
+  ctx->canvas->setTextWrap(false);
+  ctx->canvas->setTextSize(1);
 }
 
 void QueueScreen::update() {
-  if (inputManager->isLeftButtonDown()) {
-    select_index = (select_index + 1) % state->queue.size();
+  if (ctx->input->isLeftButtonDown()) {
+    select_index = (select_index + 1) % ctx->state->queue.size();
   }
 }
 
 void QueueScreen::draw() {
-  canvas->fillScreen(BG);
+  ctx->canvas->fillScreen(BG);
 
-  canvas->setTextColor(FG);
-  canvas->setFont(&monogram8pt7b);
-  canvas->setCursor(SCREEN_WIDTH / 2 - 8, 10);
-  canvas->print("QUEUE");
+  ctx->canvas->setTextColor(FG);
+  ctx->canvas->setFont(&monogram8pt7b);
+  ctx->canvas->setCursor(SCREEN_WIDTH / 2 - 8, 10);
+  ctx->canvas->print("QUEUE");
 
-  for (size_t i = 0; i < state->queue.size(); i++) {
+  for (size_t i = 0; i < ctx->state->queue.size(); i++) {
     if (select_index == i) {
-      canvas->fillRect(0, 18 + 18 * i, SCREEN_WIDTH, 18, ACCENT);
+      ctx->canvas->fillRect(0, 18 + 18 * i, SCREEN_WIDTH, 18, ACCENT);
     }
 
-    // const Track& track = state->queue[i];
-    // canvas->setCursor(8, 30 + 18 * i);
-    // canvas->setTextColor(select_index == i ? BG : FG);
-    // canvas->print(track.title);
-    // canvas->print(" - ");
-    // canvas->print(track.artist);
+    // const Track& track = ctx->state->queue[i];
+    // ctx->canvas->setCursor(8, 30 + 18 * i);
+    // ctx->canvas->setTextColor(select_index == i ? BG : FG);
+    // ctx->canvas->print(track.title);
+    // ctx->canvas->print(" - ");
+    // ctx->canvas->print(track.artist);
   }
 }

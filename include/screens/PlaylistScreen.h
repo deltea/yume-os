@@ -10,16 +10,10 @@
 
 class PlaylistScreen : public Screen {
   private:
-    GFXcanvas16* canvas;
-    ScreenManager* screenManager;
-    State* state;
-    InputManager* inputManager;
-    FileManager* fileManager;
-
     int select_index;
 
   public:
-    PlaylistScreen(ScreenManager* screenManager, GFXcanvas16* canvas, State* state, InputManager* inputManager, FileManager* fileManager);
+    PlaylistScreen(AppContext* ctx) : Screen(ctx) {};
 
     void init() override;
     void update() override;

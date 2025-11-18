@@ -1,23 +1,20 @@
 #include <SD.h>
 #include "screens/LibraryScreen.h"
+#include "InputManager.h"
 #include "constants.h"
 #include "cutepixel.h"
 #include "monogram.h"
 
-LibraryScreen::LibraryScreen(
-  ScreenManager* screenManager, GFXcanvas16* canvas, State* state, InputManager* inputManager, FileManager* fileManager
-) : screenManager(screenManager), canvas(canvas), state(state), inputManager(inputManager), fileManager(fileManager) {
-  this->select_index = 0;
-};
-
 void LibraryScreen::init() {
-  canvas->setTextColor(FG);
-  canvas->setTextWrap(false);
-  canvas->setTextSize(1);
+  this->select_index = 0;
+
+  ctx->canvas->setTextColor(FG);
+  ctx->canvas->setTextWrap(false);
+  ctx->canvas->setTextSize(1);
 }
 
 void LibraryScreen::update() {
-  if (inputManager->isLeftButtonDown()) {
+  if (ctx->input->isLeftButtonDown()) {
     select_index++;
     if (select_index >= 4) {
       select_index = 0;
@@ -26,14 +23,14 @@ void LibraryScreen::update() {
 }
 
 void LibraryScreen::draw() {
-  canvas->fillScreen(BG);
+  ctx->canvas->fillScreen(BG);
 
   int count = 0;
   for (uint8_t row = 0; row < 2; row++) {
     for (uint8_t col = 0; col < 2; col++) {
-      canvas->setCursor(col * 64 + 2, row * 32 + 2);
-      canvas->setTextColor(count == select_index ? FG : 0xFF00);
-      canvas->print(OPTIONS[count]);
+      ctx->canvas->setCursor(col * 64 + 2, row * 32 + 2);
+      ctx->canvas->setTextColor(count == select_index ? FG : 0xFF00);
+      ctx->canvas->print(OPTIONS[count]);
       count++;
     }
   }

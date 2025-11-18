@@ -1,19 +1,14 @@
 #include "screens/ConfirmationScreen.h"
-#include "ScreenManager.h"
-#include "State.h"
 #include "constants.h"
 #include "cutepixel.h"
 #include "monogram.h"
 
-ConfirmationScreen::ConfirmationScreen(ScreenManager* screenManager, GFXcanvas16* canvas, State* state, InputManager* inputManager, FileManager* fileManager)
-  : screenManager(screenManager), canvas(canvas), state(state), inputManager(inputManager), fileManager(fileManager) {};
-
 void ConfirmationScreen::init() {
-  canvas->setTextColor(FG);
-  canvas->setTextWrap(false);
-  canvas->setTextSize(1);
+  ctx->canvas->setTextColor(FG);
+  ctx->canvas->setTextWrap(false);
+  ctx->canvas->setTextSize(1);
 
-  // canvas->getTextBounds(danger_text, 0, 0, nullptr, nullptr, &text_width, nullptr);
+  // ctx->canvas->getTextBounds(danger_text, 0, 0, nullptr, nullptr, &text_width, nullptr);
   text_width = danger_text.length() * 7;
 }
 
@@ -23,35 +18,35 @@ void ConfirmationScreen::update() {
 }
 
 void ConfirmationScreen::draw() {
-  canvas->fillScreen(BG);
+  ctx->canvas->fillScreen(BG);
 
   // danger bars
-  canvas->fillRect(0, margin, SCREEN_WIDTH, 12, FG);
-  canvas->fillRect(0, SCREEN_HEIGHT - 12 - margin, SCREEN_WIDTH, 12, FG);
+  ctx->canvas->fillRect(0, margin, SCREEN_WIDTH, 12, FG);
+  ctx->canvas->fillRect(0, SCREEN_HEIGHT - 12 - margin, SCREEN_WIDTH, 12, FG);
 
-  canvas->setFont(&cute_pixel8pt7b);
-  canvas->setTextColor(BG);
+  ctx->canvas->setFont(&cute_pixel8pt7b);
+  ctx->canvas->setTextColor(BG);
 
   int x = -scroll;
   while (x < SCREEN_WIDTH + text_width) {
-    canvas->setTextColor(BG);
-    canvas->setCursor(x, 13);
-    canvas->print(danger_text);
-    canvas->setCursor(x - text_width / 2, SCREEN_HEIGHT - 7);
-    canvas->print(danger_text);
+    ctx->canvas->setTextColor(BG);
+    ctx->canvas->setCursor(x, 13);
+    ctx->canvas->print(danger_text);
+    ctx->canvas->setCursor(x - text_width / 2, SCREEN_HEIGHT - 7);
+    ctx->canvas->print(danger_text);
 
     x += text_width;
   }
 
   // confirmation prompt
-  canvas->setTextColor(FG);
-  canvas->setCursor(SCREEN_WIDTH / 2 - 45, SCREEN_HEIGHT / 2 - 16);
-  canvas->print("are you sure?");
+  ctx->canvas->setTextColor(FG);
+  ctx->canvas->setCursor(SCREEN_WIDTH / 2 - 45, SCREEN_HEIGHT / 2 - 16);
+  ctx->canvas->print("are you sure?");
 
-  canvas->setFont(&monogram8pt7b);
-  canvas->setCursor(SCREEN_WIDTH / 2 - 10, SCREEN_HEIGHT / 2 + 10);
-  canvas->print("yup");
+  ctx->canvas->setFont(&monogram8pt7b);
+  ctx->canvas->setCursor(SCREEN_WIDTH / 2 - 10, SCREEN_HEIGHT / 2 + 10);
+  ctx->canvas->print("yup");
 
-  canvas->setCursor(SCREEN_WIDTH / 2 - 14, SCREEN_HEIGHT / 2 + 25);
-  canvas->print("nope");
+  ctx->canvas->setCursor(SCREEN_WIDTH / 2 - 14, SCREEN_HEIGHT / 2 + 25);
+  ctx->canvas->print("nope");
 }
