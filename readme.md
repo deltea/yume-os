@@ -13,5 +13,6 @@ library manager here: [yume_manager](https://github.com/deltea/yume_manager)
 - [ ] sd card randomly doesn't initialize
   - possibly contacts on sd card dirty
 - [ ] constant droning sound in the background
+- [ ] track progress time is a few seconds over the actual length
 - [x] randomly crashing out when switching song because of "guru meditation"
   - problem was loading cover art on stack instead of heap
