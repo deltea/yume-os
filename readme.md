@@ -8,6 +8,14 @@ my dream mp3 player made with an esp32
 
 library manager here: [yume_manager](https://github.com/deltea/yume_manager)
 
+## hardware
+
+- adafruit esp32 feather v2
+- adafruit TLV320DAC3100 i2s dac
+- adafruit micro sd breakout+
+- 1.5 in waveshare rgb oled 128x128 display
+- rotary encoder
+
 ## known issues
 
 - [ ] sd card randomly doesn't initialize
