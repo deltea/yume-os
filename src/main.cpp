@@ -31,11 +31,20 @@ State state;
 InputManager inputManager;
 AudioManager audioManager;
 
-ConfirmationScreen confirmationScreen(&screenManager, &currentFrame, &state, &inputManager, &fileManager);
-PlayerScreen playerScreen(&screenManager, &currentFrame, &state, &inputManager, &fileManager, &audioManager);
-LibraryScreen libraryScreen(&screenManager, &currentFrame, &state, &inputManager, &fileManager);
-QueueScreen queueScreen(&screenManager, &currentFrame, &state, &inputManager, &fileManager);
-PlaylistScreen playlistScreen(&screenManager, &currentFrame, &state, &inputManager, &fileManager);
+AppContext ctx = {
+  .state = &state,
+  .audio = &audioManager,
+  .files = &fileManager,
+  .input = &inputManager,
+  .screens = &screenManager,
+  .canvas = &currentFrame
+};
+
+ConfirmationScreen confirmationScreen(&ctx);
+PlayerScreen playerScreen(&ctx);
+LibraryScreen libraryScreen(&ctx);
+QueueScreen queueScreen(&ctx);
+PlaylistScreen playlistScreen(&ctx);
 
 volatile int last_state_a = HIGH;
 volatile int rotary_value = 0;
@@ -125,8 +134,8 @@ void setup() {
   display.setCursor(SCREEN_WIDTH / 2 - getTextWidth("YUME_OS") / 2, SCREEN_HEIGHT / 2 - 8);
   display.println("YUME_OS");
   display.setFont(&monogram8pt7b);
-  display.setCursor(SCREEN_WIDTH / 2 - getTextWidth("booting up...") / 2, SCREEN_HEIGHT / 2 + 8);
-  display.println("booting up...");
+  // display.setCursor(SCREEN_WIDTH / 2 - getTextWidth("booting up...") / 2, SCREEN_HEIGHT / 2 + 8);
+  // display.println("booting up...");
   display.drawRGBBitmap(SCREEN_WIDTH / 2 - getTextWidth("YUME_OS") / 2 - 18, SCREEN_HEIGHT / 2 - 15, ICON_MUSIC, 16, 9);
 
   // card reader initializion

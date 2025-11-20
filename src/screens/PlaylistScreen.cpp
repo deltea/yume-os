@@ -6,30 +6,26 @@
 #include "utils.h"
 #include "icons.h"
 
-PlaylistScreen::PlaylistScreen(
-  ScreenManager* screenManager, GFXcanvas16* canvas, State* state, InputManager* inputManager, FileManager* fileManager
-) : screenManager(screenManager), canvas(canvas), state(state), inputManager(inputManager), fileManager(fileManager) {
-  this->select_index = 0;
-};
-
 void PlaylistScreen::init() {
-  canvas->setTextColor(FG);
-  canvas->setTextWrap(false);
-  canvas->setTextSize(1);
-  canvas->setFont(&monogram8pt7b);
+  select_index = 0;
+
+  ctx->canvas->setTextColor(FG);
+  ctx->canvas->setTextWrap(false);
+  ctx->canvas->setTextSize(1);
+  ctx->canvas->setFont(&monogram8pt7b);
 }
 
 void PlaylistScreen::update() {
-  if (inputManager->isLeftButtonDown()) {
-    select_index = (select_index + 1) % state->queue.size();
+  if (ctx->input->isLeftButtonDown()) {
+    select_index = (select_index + 1) % ctx->state->queue.size();
   }
 }
 
 void PlaylistScreen::draw() {
-  canvas->fillScreen(BG);
+  ctx->canvas->fillScreen(BG);
 
-  canvas->drawRGBBitmap(1, 3, ICON_PLAYLIST, 9, 8);
-  canvas->setCursor(14, 9);
-  canvas->print("PLAYLISTS");
-  canvas->fillRect(0, 16, SCREEN_WIDTH, 1, FG);
+  ctx->canvas->drawRGBBitmap(1, 3, ICON_PLAYLIST, 9, 8);
+  ctx->canvas->setCursor(14, 9);
+  ctx->canvas->print("PLAYLISTS");
+  ctx->canvas->fillRect(0, 16, SCREEN_WIDTH, 1, FG);
 }

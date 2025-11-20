@@ -1,10 +1,14 @@
 #pragma once
 
-#include <Adafruit_GFX.h>
+#include "AppContext.h"
 
 class Screen {
+  protected:
+    AppContext* ctx;
+
   public:
-    virtual ~Screen() {};
+    Screen(AppContext* ctx) : ctx(ctx) {}
+    virtual ~Screen() = default;
 
     virtual void init() = 0;
     virtual void update() = 0;

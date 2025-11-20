@@ -2,20 +2,11 @@
 
 #include <Adafruit_GFX.h>
 
-#include "ScreenManager.h"
 #include "Screen.h"
-#include "State.h"
-#include "InputManager.h"
-#include "FileManager.h"
+#include "AppContext.h"
 
 class ConfirmationScreen : public Screen {
   private:
-    GFXcanvas16* canvas;
-    ScreenManager* screenManager;
-    State* state;
-    InputManager* inputManager;
-    FileManager* fileManager;
-
     int select_index = 0;
     float margin = 4;
     int scroll = 0;
@@ -24,7 +15,7 @@ class ConfirmationScreen : public Screen {
     uint16_t text_width = 0;
 
   public:
-    ConfirmationScreen(ScreenManager* screenManager, GFXcanvas16* canvas, State* state, InputManager* inputManager, FileManager* fileManager);
+    ConfirmationScreen(AppContext* ctx) : Screen(ctx) {};
 
     void init() override;
     void update() override;
