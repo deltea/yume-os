@@ -46,20 +46,6 @@ LibraryScreen libraryScreen(&ctx);
 QueueScreen queueScreen(&ctx);
 PlaylistScreen playlistScreen(&ctx);
 
-volatile int last_state_a = HIGH;
-volatile int rotary_value = 0;
-
-void IRAM_ATTR readEncoder() {
-  int current_state_a = digitalRead(ROTARY_A);
-
-  if (current_state_a != last_state_a) {
-    rotary_value += (digitalRead(ROTARY_B) != current_state_a) ? 1 : -1;
-    Serial.println(rotary_value);
-  }
-
-  last_state_a = current_state_a;
-}
-
 void audioTask(void *parameter) {
   while (true) {
     if (audioManager.audio->isRunning()) {
@@ -81,8 +67,6 @@ void setup() {
   display.setSPISpeed(8000000);
   display.setTextColor(FG);
 
-  delay(100);
-
   Wire.begin(22, 20);
   if (!dac.begin()) {
     Serial.println("dac initialization failed!");
@@ -90,42 +74,19 @@ void setup() {
     return;
   }
 
-  // dac configuration
-  dac.setCodecInterface(TLV320DAC3100_FORMAT_I2S, TLV320DAC3100_DATA_LEN_32);
-  dac.setCodecClockInput(TLV320DAC3100_CODEC_CLKIN_PLL);
-  dac.setPLLClockInput(TLV320DAC3100_PLL_CLKIN_BCLK);
-  dac.setPLLValues(1, 1, 64, 0);
-  dac.powerPLL(true);
-
-  dac.setNDAC(true, 1);
-  dac.setMDAC(true, 1);
-
-  dac.setDACDataPath(true, true, TLV320_DAC_PATH_NORMAL, TLV320_DAC_PATH_NORMAL, TLV320_VOLUME_STEP_1SAMPLE);
-  dac.configureAnalogInputs(TLV320_DAC_ROUTE_MIXER, TLV320_DAC_ROUTE_MIXER, false, false, false, false);
-  dac.configureHeadphoneDriver(true, true, TLV320_HP_COMMON_1_35V, false);
-
-  dac.configureHPL_PGA(0, true);
-  dac.configureHPR_PGA(0, true);
-  dac.setHPLVolume(true, 15);
-  dac.setHPRVolume(true, 15);
-  dac.setChannelVolume(false, 0);
-  dac.setChannelVolume(true, 0);
-  dac.setDACVolumeControl(false, false, TLV320_VOL_INDEPENDENT);
-
-  dac.configureHeadphonePop(true, TLV320_HP_TIME_304MS, TLV320_RAMP_4MS);
-  dac.setInputCommonMode(true, true);
-
-  delay(100);
+  audioManager.setupDac();
 
   // input
   pinMode(BUTTON, INPUT_PULLUP);
   pinMode(BUTTON_LEFT, INPUT_PULLUP);
   pinMode(BUTTON_RIGHT, INPUT_PULLUP);
-  pinMode(ROTARY_A, INPUT_PULLUP);
-  pinMode(ROTARY_B, INPUT_PULLUP);
+  pinMode(ROTARY_ROT, INPUT_PULLUP);
+  pinMode(ROTARY_BUTTON, INPUT_PULLUP);
 
   // wrapper for isr
-  attachInterrupt(digitalPinToInterrupt(ROTARY_A), readEncoder, CHANGE);
+  attachInterrupt(digitalPinToInterrupt(ROTARY_ROT), []() {
+    inputManager.readEncoder();
+  }, CHANGE);
 
   // boot screen
   Serial.println("booting...");
@@ -168,8 +129,8 @@ void loop() {
   screenManager.update();
   screenManager.draw();
 
-  dac.setChannelVolume(false, -6 + rotary_value);
-  dac.setChannelVolume(true, -6 + rotary_value);
+  dac.setChannelVolume(false, -6 + inputManager.getRotaryValue());
+  dac.setChannelVolume(true, -6 + inputManager.getRotaryValue());
 
   // compare and update only changed pixels
   uint16_t* curr = currentFrame.getBuffer();
@@ -195,6 +156,5 @@ void loop() {
 
   state.setBatteryLevel((int)(batteryFraction * 100.0));
 
-  // delay(1000 / 60);
   vTaskDelay(4);
 }

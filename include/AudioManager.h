@@ -15,4 +15,5 @@ class AudioManager {
     void initAudio();
     void playTrack(const Track& track);
     float getAudioCurrentTime();
+    void setupDac();
 };

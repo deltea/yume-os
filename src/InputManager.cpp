@@ -4,7 +4,9 @@
 InputManager::InputManager() {
   this->is_left_button_down = false;
   this->is_right_button_down = false;
-  this->last_state_a = digitalRead(ROTARY_A);
+
+  this->rotary_last_state = HIGH;
+  this->rotary_value = 0;
 }
 
 bool InputManager::isLeftButtonDown() {
@@ -29,19 +31,17 @@ bool InputManager::isRightButtonDown() {
   return false;
 }
 
-// void IRAM_ATTR InputManager::readEncoder() {
-//   int current_state_a = digitalRead(ROTARY_A);
+void IRAM_ATTR InputManager::readEncoder() {
+  int rotary_current_state = digitalRead(ROTARY_ROT);
 
-//   if (current_state_a != last_state_a) {
-//     if (digitalRead(ROTARY_B) != current_state_a) {
-//       rotary_value++;
-//     } else {
-//       rotary_value--;
-//     }
+  if (rotary_current_state != rotary_last_state) {
+    rotary_value += (digitalRead(ROTARY_BUTTON) != rotary_current_state) ? 1 : -1;
+    Serial.println(rotary_value);
+  }
 
-//     Serial.print("value - ");
-//     Serial.println(rotary_value);
-//   }
+  rotary_last_state = rotary_current_state;
+}
 
-//   last_state_a = current_state_a;
-// }
+int InputManager::getRotaryValue() {
+  return rotary_value;
+}

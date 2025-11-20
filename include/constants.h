@@ -18,8 +18,8 @@
 // input
 #define BUTTON_LEFT 14
 #define BUTTON_RIGHT 12
-#define ROTARY_A 7
-#define ROTARY_B 4
+#define ROTARY_ROT 7
+#define ROTARY_BUTTON 4
 
 // battery detction
 #define MAX_ANALOG_VALUE 4095
