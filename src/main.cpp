@@ -134,8 +134,8 @@ void setup() {
   display.setCursor(SCREEN_WIDTH / 2 - getTextWidth("YUME_OS") / 2, SCREEN_HEIGHT / 2 - 8);
   display.println("YUME_OS");
   display.setFont(&monogram8pt7b);
-  display.setCursor(SCREEN_WIDTH / 2 - getTextWidth("booting up...") / 2, SCREEN_HEIGHT / 2 + 8);
-  display.println("booting up...");
+  // display.setCursor(SCREEN_WIDTH / 2 - getTextWidth("booting up...") / 2, SCREEN_HEIGHT / 2 + 8);
+  // display.println("booting up...");
   display.drawRGBBitmap(SCREEN_WIDTH / 2 - getTextWidth("YUME_OS") / 2 - 18, SCREEN_HEIGHT / 2 - 15, ICON_MUSIC, 16, 9);
 
   // card reader initializion
