@@ -7,7 +7,7 @@ class InputManager;
 class ScreenManager;
 class GFXcanvas16;
 
-struct AppContext {
+struct Context {
   State* state;
   AudioManager* audio;
   FileManager* files;

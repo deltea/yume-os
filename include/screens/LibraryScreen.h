@@ -4,7 +4,6 @@
 #include <Adafruit_GFX.h>
 
 #include "Screen.h"
-#include "AppContext.h"
 
 using namespace std;
 
@@ -15,7 +14,7 @@ class LibraryScreen : public Screen {
     int select_index;
 
   public:
-    LibraryScreen(AppContext* ctx) : Screen(ctx) {};
+    LibraryScreen(Context* ctx) : Screen(ctx) {};
 
     void init() override;
     void update() override;

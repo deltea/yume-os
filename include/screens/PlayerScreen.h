@@ -3,7 +3,6 @@
 #include <Adafruit_GFX.h>
 
 #include "Screen.h"
-#include "AppContext.h"
 #include "Track.h"
 
 class PlayerScreen : public Screen {
@@ -26,7 +25,7 @@ class PlayerScreen : public Screen {
     void updateTrack();
 
   public:
-    PlayerScreen(AppContext* ctx) : Screen(ctx) {};
+    PlayerScreen(Context* ctx) : Screen(ctx) {};
     ~PlayerScreen();
 
     void init() override;

@@ -3,7 +3,6 @@
 #include <Adafruit_GFX.h>
 
 #include "Screen.h"
-#include "AppContext.h"
 
 class ConfirmationScreen : public Screen {
   private:
@@ -15,7 +14,7 @@ class ConfirmationScreen : public Screen {
     uint16_t text_width = 0;
 
   public:
-    ConfirmationScreen(AppContext* ctx) : Screen(ctx) {};
+    ConfirmationScreen(Context* ctx) : Screen(ctx) {};
 
     void init() override;
     void update() override;

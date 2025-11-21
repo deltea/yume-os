@@ -159,9 +159,4 @@ void PlayerScreen::draw() {
   }
   ctx->canvas->drawRect(SCREEN_WIDTH / 2 - 43, SCREEN_HEIGHT / 3 - 38, 86, 86, this->current_track.color);
   ctx->canvas->drawRect(SCREEN_WIDTH / 2 - 43 - 1, SCREEN_HEIGHT / 3 - 38 - 1, 86 + 2, 86 + 2, this->current_track.color);
-
-  // battery indicator
-  ctx->canvas->drawRect(0, 0, 12, 6, FG);
-  ctx->canvas->fillRect(12, 2, 1, 2, FG);
-  ctx->canvas->fillRect(1, 1, 11 * (ctx->state->batteryLevel / 100.0), 4, FG);
 }

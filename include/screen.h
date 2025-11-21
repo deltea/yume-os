@@ -1,13 +1,13 @@
 #pragma once
 
-#include "AppContext.h"
+#include "Context.h"
 
 class Screen {
   protected:
-    AppContext* ctx;
+    Context* ctx;
 
   public:
-    Screen(AppContext* ctx) : ctx(ctx) {}
+    Screen(Context* ctx) : ctx(ctx) {}
     virtual ~Screen() = default;
 
     virtual void init() = 0;

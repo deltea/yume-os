@@ -13,7 +13,7 @@ class QueueScreen : public Screen {
     int select_index;
 
   public:
-    QueueScreen(AppContext* ctx) : Screen(ctx) {};
+    QueueScreen(Context* ctx) : Screen(ctx) {};
 
     void init() override;
     void update() override;

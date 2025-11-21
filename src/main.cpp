@@ -31,7 +31,7 @@ State state;
 InputManager inputManager;
 AudioManager audioManager;
 
-AppContext ctx = {
+Context ctx = {
   .state = &state,
   .audio = &audioManager,
   .files = &fileManager,
@@ -148,12 +148,14 @@ void loop() {
   }
 
   // battery calculations
+  // battery indicator
   int rawValue = analogRead(A13);
   // float voltageLevel = (rawValue / 4095.0) * 2 * 1.1 * 3.3;
   float voltageLevel = rawValue * 2 / 1000;
   float batteryFraction = voltageLevel / MAX_BATTERY_VOLTAGE;
-  // Serial.print("Battery voltage: ");
-  // Serial.println(voltageLevel);
+  currentFrame.drawRect(0, 0, 12, 6, FG);
+  currentFrame.fillRect(12, 2, 1, 2, FG);
+  currentFrame.fillRect(1, 1, 11 * (state.batteryLevel / 100.0), 4, FG);
 
   state.setBatteryLevel((int)(batteryFraction * 100.0));
 

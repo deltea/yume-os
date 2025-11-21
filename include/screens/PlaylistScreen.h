@@ -13,7 +13,7 @@ class PlaylistScreen : public Screen {
     int select_index;
 
   public:
-    PlaylistScreen(AppContext* ctx) : Screen(ctx) {};
+    PlaylistScreen(Context* ctx) : Screen(ctx) {};
 
     void init() override;
     void update() override;
