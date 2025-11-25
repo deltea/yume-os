@@ -24,3 +24,9 @@ library manager here: [yume_manager](https://github.com/deltea/yume_manager)
 - [ ] track progress time is a few seconds over the actual length
 - [x] randomly crashing out when switching song because of "guru meditation"
   - problem was loading cover art on stack instead of heap
+
+## colors
+
+- accent: #ed8e28
+- background: #000000
+- foreground: #ffffff
